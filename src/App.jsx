@@ -6,7 +6,7 @@ function App() {
     <Router>
       <div className="app">
         <main className="main-content">
-          <h1>YYC Track</h1>
+          <h1 className>YYC Track</h1>
           <p>Initial setup complete! Ready for development.</p>
           <p>Backend API: <a href="http://localhost:5000" target="_blank">http://localhost:5000</a></p>
         </main>
