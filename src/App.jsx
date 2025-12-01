@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
+import Footer from './components/Footer';
 
 /**
  * App Component
@@ -29,7 +30,7 @@ const App = () => {
       <Header isLoggedIn={isLoggedIn}/>
 
       {/* main content area where the page is displayed */}
-      <main className="px-10 py-6">
+      <main className="px-10 py-6 min-h-[85vh]">
 
         <Routes>
           {/* public pages */}
@@ -52,6 +53,9 @@ const App = () => {
         </Routes>
 
       </main>
+
+      {/* Global Footer */}
+      <Footer />
     </Router>
   );
 };
