@@ -15,7 +15,7 @@ import profileIcon from "../assets/profile-icon.png";
  * - isLoggedIn (boolean): determines which UI to display.
  */
 
-export default function Header({ isLoggedIn = false }) {
+const Header = ({ isLoggedIn = false }) => {
   return (
     // main header container
     <header className="w-full bg-[#BC0B2A] text-white px-10 py-3 flex items-center justify-between shadow-md">
@@ -100,4 +100,6 @@ export default function Header({ isLoggedIn = false }) {
       </nav>
     </header>
   );
-}
+};
+
+export default Header; 

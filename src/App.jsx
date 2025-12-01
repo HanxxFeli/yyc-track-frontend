@@ -1,6 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
-import "./index.css";
 import Header from './components/Header';
 
 /**
@@ -14,17 +12,17 @@ import Header from './components/Header';
  * - `isLoggedIn` will be replaced with real authentication
  */
 
-// temporary login check
-// for now it is simulated by checking if a token exists in local storage (will be replaced with real backend authentication)
-const isLoggedIn = !!localStorage.getItem("token");
-
-// page imports
+// page imports (these are placeholder components for now)
+// NOTE FOR ENO: Make sure your page component names match exactly
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AccountSettings from "./pages/AccountSettings";
 
-function App() {
+const App = () => {
+  // temporary login check
+  // for now it is simulated by checking if a token exists in local storage (will be replaced with real backend authentication)
+  const isLoggedIn = !!localStorage.getItem("token");
   return (
     <Router>
       {/* Global header */}
@@ -36,21 +34,26 @@ function App() {
         <Routes>
           {/* public pages */}
           <Route path="/" element={<Home />} />
-          <Route path="/map" element={<Home />} /> {/* placeholder */}
-          <Route path="/stations" element={<Home />} /> {/* placeholder */}
+          {/* placeholder - NOTE: Create Map.jsx later */}
+          <Route path="/map" element={<Home />} />
+          {/* placeholder - NOTE: Create Stations.jsx later */}
+          <Route path="/stations" element={<Home />} />
 
-          {/* auth pages */}
+          {/* auth pages 
+              NOTE FOR ENO: 
+              Login.jsx and Register.jsx must match naming conventions */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
           {/* account settings */}
           <Route path="/account-settings" element={<AccountSettings />} />
-          <Route path="/feedback" element={<Home />} /> {/* placeholder */}
+          {/* placeholder - NOTE: Create Feedback.jsx later */}
+          <Route path="/feedback" element={<Home />} />
         </Routes>
-        
+
       </main>
     </Router>
   );
-}
+};
 
 export default App;
