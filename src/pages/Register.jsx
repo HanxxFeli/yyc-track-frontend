@@ -80,7 +80,7 @@ const Register = () => {
 
     setIsLoading(true);
 
-    // Replace this setTimeout with your actual API call
+    // Replace this setTimeout with API call
     // temporary mock API call
     setTimeout(() => {
       console.log("Registration data ready for backend:", {
