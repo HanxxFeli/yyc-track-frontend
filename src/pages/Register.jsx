@@ -1,26 +1,52 @@
 import { useState } from "react";
 import InputField from "../components/InputField";
 import PasswordField from "../components/PasswordField";
-import PasswordStrength from "../components/PasswordStrength";
+import PasswordRequirements from "../components/PasswordRequirements";
 import CheckboxField from "../components/CheckboxField";
 import SubmitButton from "../components/SubmitButton";
+import GoogleSignInButton from "../components/GoogleSignInButton";
 import SuccessMessage from "../components/SuccessMessage";
 
+/**
+ * Register Page Component
+ *
+ * Main registration page that handles:
+ * - Form state management
+ * - Input validation (client-side)
+ * - Form submission
+ * - Success/error states
+ *
+ * Form fields:
+ * - First Name
+ * - Last Name
+ * - Email
+ * - Password
+ * - Confirm Password
+ * - Postal Code
+ * - Terms & Conditions checkbox
+ */
 const Register = () => {
-  // Form state
+  // Main form data state
   const [formData, setFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
+    postalCode: "",
     agreeToTerms: false,
   });
 
+  // Error messages for each field
   const [errors, setErrors] = useState({});
+
+  // Loading state for submit button
   const [isLoading, setIsLoading] = useState(false);
+
+  // Success state to show success message
   const [success, setSuccess] = useState(false);
 
-  // handle input changes
+  // Handle all input changes (text inputs and checkbox)
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -28,38 +54,61 @@ const Register = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
 
-    // clear error when user starts typing
+    // Clear error for this field when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
-  //validation
+  // Validate all form fields before submission
   const validate = () => {
     const newErrors = {};
 
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = "Full name is required";
+    // Validate first name
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required";
     }
 
+    // Validate last name
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required";
+    }
+
+    // Validate email
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Email is invalid";
     }
 
+    // Validate password (based on requirements)
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+    } else {
+      if (formData.password.length < 7) {
+        newErrors.password = "Password must be at least 7 characters";
+      } else if (!/[a-z]/.test(formData.password)) {
+        newErrors.password = "Password must contain a lowercase letter";
+      } else if (!/[A-Z]/.test(formData.password)) {
+        newErrors.password = "Password must contain an uppercase letter";
+      } else if (!/[^a-zA-Z0-9]/.test(formData.password)) {
+        newErrors.password = "Password must contain a special character";
+      }
     }
 
+    // Validate confirm password
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = "Please confirm your password";
     } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
     }
 
+    // Validate postal code
+    if (!formData.postalCode.trim()) {
+      newErrors.postalCode = "Postal code is required";
+    }
+
+    // Validate terms agreement
     if (!formData.agreeToTerms) {
       newErrors.agreeToTerms = "You must agree to the terms and conditions";
     }
@@ -67,11 +116,11 @@ const Register = () => {
     return newErrors;
   };
 
-  // handle form submission
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // run validation
+    // Run validation
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -80,25 +129,29 @@ const Register = () => {
 
     setIsLoading(true);
 
-    // Replace this setTimeout with API call
-    // temporary mock API call
+    // Replace this with actual API call
+    // Temporary mock API call for testing
     setTimeout(() => {
       console.log("Registration data ready for backend:", {
-        fullName: formData.fullName,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
+        postalCode: formData.postalCode,
       });
 
       setSuccess(true);
       setIsLoading(false);
 
-      // reset form after success
+      // Reset form after 3 seconds
       setTimeout(() => {
         setFormData({
-          fullName: "",
+          firstName: "",
+          lastName: "",
           email: "",
           password: "",
           confirmPassword: "",
+          postalCode: "",
           agreeToTerms: false,
         });
         setSuccess(false);
@@ -106,83 +159,149 @@ const Register = () => {
     }, 1500);
   };
 
+  // Handle Google sign-in (placeholder)
+  const handleGoogleSignIn = () => {
+    console.log("Google sign-in clicked");
+    // Add Google OAuth logic here
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border-t-4 border-[#BC0B2A]">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Create Account
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-md w-full max-w-sm p-6">
+        {/* Page header */}
+        <div className="mb-6">
+          <h1 className="text-xl font-semibold text-gray-900 mb-1">
+            Create an account
           </h1>
-          <p className="text-gray-600">Join YYC Track today</p>
+          <p className="text-xs text-gray-600">
+            Sign up to access real-time station feedback and alerts.
+          </p>
         </div>
 
-        {/* Success message */}
+        {/* Success message (shown after registration) */}
         {success && <SuccessMessage message="Account created successfully!" />}
 
         {/* Registration form */}
         <div>
-          <InputField
-            label="Full Name"
-            name="fullName"
-            value={formData.fullName}
-            onChange={handleChange}
-            error={errors.fullName}
-            placeholder="Lebron James"
-          />
+          {/* First and Last Name in a row */}
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">
+                First Name
+              </label>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-[#BC0B2A] text-sm ${
+                  errors.firstName ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+              {errors.firstName && (
+                <p className="mt-1 text-xs text-red-600">{errors.firstName}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">
+                Last Name
+              </label>
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-[#BC0B2A] text-sm ${
+                  errors.lastName ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+              {errors.lastName && (
+                <p className="mt-1 text-xs text-red-600">{errors.lastName}</p>
+              )}
+            </div>
+          </div>
 
+          {/* Email input */}
           <InputField
-            label="Email Address"
+            label="Email"
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             error={errors.email}
-            placeholder="tite@email.com"
+            placeholder=""
           />
 
+          {/* Password input */}
           <PasswordField
             label="Password"
             name="password"
             value={formData.password}
             onChange={handleChange}
             error={errors.password}
-            placeholder="Enter your password"
+            placeholder=""
           />
 
-          <PasswordStrength password={formData.password} />
+          {/* Password requirements */}
+          <PasswordRequirements />
 
+          {/* Confirm password input */}
           <PasswordField
             label="Confirm Password"
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
             error={errors.confirmPassword}
-            placeholder="Confirm your password"
+            placeholder=""
           />
 
+          {/* Postal Code input */}
+          <InputField
+            label="Postal Code"
+            name="postalCode"
+            value={formData.postalCode}
+            onChange={handleChange}
+            error={errors.postalCode}
+            placeholder=""
+          />
+
+          {/* Terms and conditions checkbox */}
           <CheckboxField
-            label="I agree to the Terms and Conditions and Privacy Policy"
+            label={
+              <span>
+                I agree to the{" "}
+                <a href="/terms" className="text-[#BC0B2A] underline">
+                  Terms and Conditions
+                </a>
+              </span>
+            }
             name="agreeToTerms"
             checked={formData.agreeToTerms}
             onChange={handleChange}
             error={errors.agreeToTerms}
           />
 
+          {/* Submit button */}
           <SubmitButton isLoading={isLoading} onClick={handleSubmit}>
             Create Account
           </SubmitButton>
+
+          {/* Divider */}
+          <div className="my-4 text-center text-xs text-gray-500">or</div>
+
+          {/* Google sign-in button */}
+          <GoogleSignInButton onClick={handleGoogleSignIn} />
         </div>
 
-        {/* Login link */}
+        {/* Login link for existing users */}
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-700">
+          <p className="text-xs text-gray-600">
             Already have an account?{" "}
             <a
               href="/login"
-              className="text-[#BC0B2A] hover:underline font-medium"
+              className="text-[#BC0B2A] font-medium hover:underline"
             >
-              Sign in
+              Login
             </a>
           </p>
         </div>

@@ -1,21 +1,19 @@
 /**
+ * SubmitButton Component
  * 
  * Primary action button with loading state
  * Shows "Creating Account..." text when loading
- * Disables button during submission to prevent doubleclicks
+ * Disables button during submission to prevent double-clicks
  * 
- * - isLoading: Boolean indicating if form is being submitted
- * - children: Button text content
- * - onClick: Function to handle button clicks
  */
-
 const SubmitButton = ({ isLoading, children, onClick }) => {
   return (
     <button
       onClick={onClick}
       disabled={isLoading}
-      className="w-full bg-[#BC0B2A] text-white py-3 rounded-lg font-medium hover:bg-[#9a0922] transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+      className="w-full bg-[#BC0B2A] text-white py-2.5 rounded font-medium hover:bg-[#9a0922] transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
     >
+      {/* Show different text based on loading state */}
       {isLoading ? 'Creating Account...' : children}
     </button>
   );
