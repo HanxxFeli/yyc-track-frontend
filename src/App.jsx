@@ -30,7 +30,7 @@ const App = () => {
       <Header isLoggedIn={isLoggedIn}/>
 
       {/* main content area where the page is displayed */}
-      <main className="px-10 py-6 min-h-[85vh]">
+      <main className="px-10 py-6 min-h-screen bg-[#F5F6F7]">
 
         <Routes>
           {/* public pages */}
