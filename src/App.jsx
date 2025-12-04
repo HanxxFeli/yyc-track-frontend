@@ -26,36 +26,39 @@ const App = () => {
   const isLoggedIn = !!localStorage.getItem("token");
   return (
     <Router>
-      {/* Global header */}
-      <Header isLoggedIn={isLoggedIn}/>
+      <div className="min-h-screen flex flex-col bg-[#F5F6F7]">
 
-      {/* main content area where the page is displayed */}
-      <main className="px-10 py-6 min-h-screen bg-[#F5F6F7]">
+        {/* Global header */}
+        <Header isLoggedIn={isLoggedIn}/>
 
-        <Routes>
-          {/* public pages */}
-          <Route path="/" element={<Home />} />
-          {/* placeholder - NOTE: Create Map.jsx later */}
-          <Route path="/map" element={<Home />} />
-          {/* placeholder - NOTE: Create Stations.jsx later */}
-          <Route path="/stations" element={<Home />} />
+        {/* main content area where the page is displayed */}
+        <main className="flex-grow px-10 py-10">
 
-          {/* auth pages 
-              NOTE FOR ENO: 
-              Login.jsx and Register.jsx must match naming conventions */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Routes>
+            {/* public pages */}
+            <Route path="/" element={<Home />} />
+            {/* placeholder - NOTE: Create Map.jsx later */}
+            <Route path="/map" element={<Home />} />
+            {/* placeholder - NOTE: Create Stations.jsx later */}
+            <Route path="/stations" element={<Home />} />
 
-          {/* account settings */}
-          <Route path="/account-settings" element={<AccountSettings />} />
-          {/* placeholder - NOTE: Create Feedback.jsx later */}
-          <Route path="/feedback" element={<Home />} />
-        </Routes>
+            {/* auth pages 
+                NOTE FOR ENO: 
+                Login.jsx and Register.jsx must match naming conventions */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-      </main>
+            {/* account settings */}
+            <Route path="/account-settings" element={<AccountSettings />} />
+            {/* placeholder - NOTE: Create Feedback.jsx later */}
+            <Route path="/feedback" element={<Home />} />
+          </Routes>
 
-      {/* Global Footer */}
-      <Footer />
+        </main>
+
+        {/* Global Footer */}
+        <Footer />
+      </div>
     </Router>
   );
 };
