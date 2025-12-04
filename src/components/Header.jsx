@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import logo from "../assets/logo-white.png";
 import profileIcon from "../assets/profile-icon.png";
 
@@ -9,13 +10,41 @@ import profileIcon from "../assets/profile-icon.png";
  * - Logo 
  * - Navigation links
  * - Feedback links (only visible when logged in)
- * - Login button when logged out, OR profile icon when logged in.
+ * - Login button when logged out, OR profile icon with dropdown menu when logged in.
+ * - Dropdown includes Account Settings + Logout (for now)
+ * - Dropdown auto-closes when clicking outside
+ * - Animated arrow indicator rotates when menu is open
  * 
  * Props:
  * - isLoggedIn (boolean): determines which UI to display.
+ * 
+ * Notes:
+ * - Logout currently clears localStorage token and refreshes the page
+ * - Authentication logic will be replaced once backend is integrated
  */
 
 const Header = ({ isLoggedIn = false }) => {
+  // state to track if the dropdown is open
+  const [ isDropdownOpen, setIsDropdownOpen ] = useState(false);
+
+  // ref to detect clicks outside the dropdown container
+  const dropdownRef = useRef(null);
+
+  // close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return() => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     // main header container
     <header className="w-full bg-[#BC0B2A] text-white px-10 py-3 flex items-center justify-between shadow-md">
@@ -88,14 +117,56 @@ const Header = ({ isLoggedIn = false }) => {
           Login
         </Link>
       ) : (
-        <Link
-          to="/account-settings">
+        // logged in: profile icon + dropdown
+        <div className="relative" ref={dropdownRef}>
+          {/* Profile icon button */}
+          <button
+            type="button"
+            onClick={() => setIsDropdownOpen((prev) => !prev)}
+            className="flex items-center gap-2 focus:outline-none"
+          >
+            {/* Profile Icon */}
             <img
               src={profileIcon}
-              className="w-9 h-9 rounded-full"
+              className="w-9 h-9 rounded-full hover:opacity-80 transition"
               alt="Profile"
             />
-          </Link>
+
+            {/* Dropdown Arrow */}
+            <svg 
+              className={`w-4 h-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
+              fill="none"
+              stroke="white"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {/* Dropdown Menu */}
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-3 w-48 bg-white text-black rounded-lg shadow-lg p-2 z-50 border border-gray-200">
+              <Link
+                to="/account-settings"
+                className="block px-3 py-2 hover:bg-gray-100 rounded-md text-sm"
+              >
+                Account Settings
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => {
+                  localStorage.removeItem("token");   // logs out user for now
+                  window.location.reload();           // refreshes so the header can update
+                }}
+                className="block w-full text-left px-3 py-2 hover:bg-gray-100 rounded-md text-sm text-red-600"
+              >
+                Logout
+              </button>
+            </div>
+          )}  
+        </div>
       )}
       </nav>
     </header>
