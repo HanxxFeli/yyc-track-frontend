@@ -1,7 +1,7 @@
 import { useState } from "react";
-import InputField from "../components/InputField";
-import PasswordField from "../components/PasswordField";
-import SubmitButton from "../components/SubmitButton";
+import LoginInputField from "../components/LoginInputField";
+import LoginPasswordField from "../components/LoginPasswordField";
+import LoginSubmitButton from "../components/LoginSubmitButton";
 import { AiOutlineWarning } from "react-icons/ai";
 
 export default function Login() {
@@ -44,7 +44,7 @@ export default function Login() {
         <form onSubmit={handleLogin}>
           
           {/* Email */}
-          <InputField
+          <LoginInputField
             label="Email"
             name="email"
             type="email"
@@ -55,7 +55,7 @@ export default function Login() {
           />
 
           {/* Password */}
-          <PasswordField
+          <LoginPasswordField
             label="Password"
             name="password"
             value={password}
@@ -85,9 +85,9 @@ export default function Login() {
           </div>
 
           {/* Login Button */}
-          <SubmitButton isLoading={isLoading}>
+          <LoginSubmitButton isLoading={isLoading}>
             Login
-          </SubmitButton>
+          </LoginSubmitButton>
 
           {/* Divider */}
           <div className="my-4 text-center text-sm text-gray-500">or</div>
