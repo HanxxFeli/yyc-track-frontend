@@ -18,6 +18,7 @@ import Footer from './components/Footer';
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
 import AccountSettings from "./pages/AccountSettings";
 
 const App = () => {
@@ -45,6 +46,7 @@ const App = () => {
               Login.jsx and Register.jsx must match naming conventions */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
 
           {/* account settings */}
           <Route path="/account-settings" element={<AccountSettings />} />

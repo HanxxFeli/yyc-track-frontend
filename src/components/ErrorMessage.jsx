@@ -1,4 +1,3 @@
-// Green success notification displayed after successful registration
 // Error message box with warning icon
 
 const ErrorMessage = ({ message, className = '' }) => {
