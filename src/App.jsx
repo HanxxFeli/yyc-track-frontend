@@ -19,6 +19,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AccountSettings from "./pages/AccountSettings";
+import AccountDeleted from './pages/AccountDeleted';
 
 const App = () => {
   // temporary login check
@@ -52,6 +53,7 @@ const App = () => {
             <Route path="/account-settings" element={<AccountSettings />} />
             {/* placeholder - NOTE: Create Feedback.jsx later */}
             <Route path="/feedback" element={<Home />} />
+            <Route path="/account-deleted" element={<AccountDeleted />} /> 
           </Routes>
 
         </main>
