@@ -29,6 +29,14 @@ export default function Login() {
     }, 800);
   };
 
+    // Handle Google sign-in 
+  const handleGoogleSignIn = (e) => {
+    e.preventDefault();
+    console.log('Google sign-in clicked');
+    // Add Google OAuth logic here
+    window.location.href = 'http://localhost:5000/api/auth/google'
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 py-10">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border">
@@ -96,6 +104,7 @@ export default function Login() {
           <button
             type="button"
             className="w-full flex items-center justify-center gap-3 border py-3 rounded-lg hover:bg-gray-50 transition"
+            onClick={handleGoogleSignIn}
           >
             <img
               src="https://developers.google.com/identity/images/g-logo.png"

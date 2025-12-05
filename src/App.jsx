@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -20,13 +20,16 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AccountSettings from "./pages/AccountSettings";
 import AccountDeleted from './pages/AccountDeleted';
+import AuthLandingPage from './pages/AuthLandingPage';
+import AuthCallback from './pages/AuthCallback';
+import CompleteProfile from './pages/CompleteProfile'
 
 const App = () => {
   // temporary login check
   // for now it is simulated by checking if a token exists in local storage (will be replaced with real backend authentication)
   const isLoggedIn = !!localStorage.getItem("token");
   return (
-    <Router>
+    <BrowserRouter>
       <div className="min-h-screen flex flex-col bg-[#F5F6F7]">
 
         {/* Global header */}
@@ -52,16 +55,25 @@ const App = () => {
             {/* account settings */}
             <Route path="/account-settings" element={<AccountSettings />} />
             {/* placeholder - NOTE: Create Feedback.jsx later */}
+
             <Route path="/feedback" element={<Home />} />
             <Route path="/account-deleted" element={<AccountDeleted />} /> 
-          </Routes>
 
+
+            {/* Dashboard landing page after user logs in */}
+            <Route path='/auth/callback' element={<AuthCallback />} />
+            {/* Dashboard landing page after user logs in */}
+            <Route path='/complete-profile' element={<CompleteProfile />} />
+            {/* Dashboard landing page after user logs in */}
+            <Route path='/dashboard' element={<AuthLandingPage />} />
+          </Routes>
+          
         </main>
 
         {/* Global Footer */}
         <Footer />
       </div>
-    </Router>
+    </BrowserRouter>
   );
 };
 

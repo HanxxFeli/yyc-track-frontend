@@ -159,10 +159,12 @@ const Register = () => {
     }, 1500);
   };
 
-  // Handle Google sign-in (placeholder)
-  const handleGoogleSignIn = () => {
+  // Handle Google sign-in 
+  const handleGoogleSignIn = (e) => {
+    e.preventDefault();
     console.log('Google sign-in clicked');
     // Add Google OAuth logic here
+    window.location.href = 'http://localhost:5000/api/auth/google'
   };
 
   return (
