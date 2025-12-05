@@ -20,6 +20,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import AccountSettings from "./pages/AccountSettings";
+import ErrorPage from "./pages/ErrorPage";
 
 const App = () => {
   // temporary login check
@@ -52,6 +53,9 @@ const App = () => {
           <Route path="/account-settings" element={<AccountSettings />} />
           {/* placeholder - NOTE: Create Feedback.jsx later */}
           <Route path="/feedback" element={<Home />} />
+
+          {/* 404 catch-all route - must be last */}
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
 
       </main>
