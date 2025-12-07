@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ManageAlerts from "../components/ManageAlerts";
 import warningIcon from "../assets/warning-icon.png";
-import PasswordInput from "../components/PasswordInput";
+import PasswordField from "../components/PasswordField";
 
 /**
  * Account Settings Page 
@@ -36,27 +36,46 @@ const AccountSettings = () => {
   const [showPasswordFields, setShowPasswordFields] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [currentPasswordError, setCurrentPasswordError] = useState("");
+  const [newPasswordError, setNewPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [globalPasswordError, setGlobalPasswordError] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
 
   const handlePasswordSave = () => {
-    // basic validation
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      setPasswordError("Please fill out fields.");
-      return;
+    // reset errors
+    setCurrentPasswordError("");
+    setNewPasswordError("");
+    setConfirmPasswordError("");
+    setGlobalPasswordError("");
+
+    let hasError = false;
+
+    // required checks
+    if (!currentPassword.trim()) {
+      setCurrentPasswordError("Current password is required.");
+      hasError = true;
     }
+    if (!newPassword.trim()) {
+      setNewPasswordError("New password is required.");
+      hasError = true;
+    }
+    if (!confirmPassword.trim()) {
+      setConfirmPasswordError("Please confirm your password.");
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    // matching check
     if (newPassword !== confirmPassword) {
-      setPasswordError("Passwords do not match.");
+      setConfirmPasswordError("Passwords do not match.");
+      setNewPasswordError("Passwords do not match.");
+      setGlobalPasswordError("Passwords do not match.");
       return;
     }
 
-    // reset ui error
-    setPasswordError("");
-
-    console.log("Password updated:",{ 
-      newPassword,
-      currentPassword
-    });
+    console.log("Password updated:", { currentPassword, newPassword });
 
     // TODO: backend here
 
@@ -64,7 +83,7 @@ const AccountSettings = () => {
     setShowPasswordFields(false);
     setNewPassword("");
     setConfirmPassword("");
-    setPasswordError("");
+    setCurrentPassword("");
   };
 
   /**
@@ -173,32 +192,38 @@ const AccountSettings = () => {
             <div className="mt-4 p-4 border rounded-lg bg-gray-50">
 
               {/* current password */}
-              <label className="text-sm font-medium">Current Password</label>
-              <PasswordInput
+              <PasswordField
+                label="Current Password"
+                name="currentPassword"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="Enter current password"
+                error={currentPasswordError}
               />
               
               {/* new password */}
-              <label className="text-sm font-medium">New Password</label>
-              <PasswordInput
+              <PasswordField
+                label="New Password"
+                name="newPassword"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter new password"
+                error={newPasswordError}
               />
 
               {/* confirm password */}
-              <label className="text-sm font-medium mt-3">Confirm Password</label>
-              <PasswordInput
+              <PasswordField
+                label="Confirm Password"
+                name="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm new password"
+                error={confirmPasswordError}
               />
 
               {/* validation error */}
-              {passwordError && (
-                <p className="text-red-600 text-sm mt-2">{passwordError}</p>
+              {globalPasswordError && (
+                <p className="text-red-600 text-sm mt-2">{globalPasswordError}</p>
               )}
 
               {/* save/cancel buttons */}
@@ -208,7 +233,6 @@ const AccountSettings = () => {
                     setShowPasswordFields(false);
                     setNewPassword("");
                     setConfirmPassword("");
-                    setPasswordError("");
                     setCurrentPassword("");
                   }}
                   className="px-4 py-2 border rounded"
@@ -305,11 +329,12 @@ const AccountSettings = () => {
             </p>
 
             {/* password input with toggle visibility */}
-            <PasswordInput
+            <PasswordField
+                name="deletePassword"
                 value={deletePassword}
                 onChange={(e) => setDeletePassword(e.target.value)}
                 placeholder="Enter your password"
-                className="mb-2"
+                error={deletePasswordError}
               />
 
             {deletePasswordError && (
