@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -21,48 +21,64 @@ import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import AccountSettings from "./pages/AccountSettings";
 import ErrorPage from "./pages/ErrorPage";
+import AccountDeleted from './pages/AccountDeleted';
+import AuthLandingPage from './pages/AuthLandingPage';
+import AuthCallback from './pages/AuthCallback';
+import CompleteProfile from './pages/CompleteProfile'
 
 const App = () => {
   // temporary login check
   // for now it is simulated by checking if a token exists in local storage (will be replaced with real backend authentication)
   const isLoggedIn = !!localStorage.getItem("token");
   return (
-    <Router>
-      {/* Global header */}
-      <Header isLoggedIn={isLoggedIn}/>
+    <BrowserRouter>
+      <div className="min-h-screen flex flex-col bg-[#F5F6F7]">
 
-      {/* main content area where the page is displayed */}
-      <main className="px-10 py-6 min-h-[85vh]">
+        {/* Global header */}
+        <Header isLoggedIn={isLoggedIn}/>
 
-        <Routes>
-          {/* public pages */}
-          <Route path="/" element={<Home />} />
-          {/* placeholder - NOTE: Create Map.jsx later */}
-          <Route path="/map" element={<Home />} />
-          {/* placeholder - NOTE: Create Stations.jsx later */}
-          <Route path="/stations" element={<Home />} />
+        {/* main content area where the page is displayed */}
+        <main className="flex-grow px-10 py-10">
 
-          {/* auth pages 
-              NOTE FOR ENO: 
-              Login.jsx and Register.jsx must match naming conventions */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Routes>
+            {/* public pages */}
+            <Route path="/" element={<Home />} />
+            {/* placeholder - NOTE: Create Map.jsx later */}
+            <Route path="/map" element={<Home />} />
+            {/* placeholder - NOTE: Create Stations.jsx later */}
+            <Route path="/stations" element={<Home />} />
 
-          {/* account settings */}
-          <Route path="/account-settings" element={<AccountSettings />} />
-          {/* placeholder - NOTE: Create Feedback.jsx later */}
-          <Route path="/feedback" element={<Home />} />
+            {/* auth pages 
+                NOTE FOR ENO: 
+                Login.jsx and Register.jsx must match naming conventions */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* 404 catch-all route - must be last */}
-          <Route path="*" element={<ErrorPage />} />
-        </Routes>
+            {/* account settings */}
+            <Route path="/account-settings" element={<AccountSettings />} />
+            {/* placeholder - NOTE: Create Feedback.jsx later */}
 
-      </main>
+            <Route path="/feedback" element={<Home />} />
+            <Route path="/account-deleted" element={<AccountDeleted />} /> 
 
-      {/* Global Footer */}
-      <Footer />
-    </Router>
+
+            {/* Dashboard landing page after user logs in */}
+            <Route path='/auth/callback' element={<AuthCallback />} />
+            {/* Dashboard landing page after user logs in */}
+            <Route path='/complete-profile' element={<CompleteProfile />} />
+            {/* Dashboard landing page after user logs in */}
+            <Route path='/dashboard' element={<AuthLandingPage />} />
+              
+            {/* 404 catch-all route - must be last */}
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+          
+        </main>
+
+        {/* Global Footer */}
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 };
 
