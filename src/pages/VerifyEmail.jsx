@@ -1,5 +1,7 @@
-import { useState } from "react";
-import VerifyEmailForm from "../components/VerifyEmailForm";
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import VerifyEmailForm from '../components/VerifyEmailForm';
 
 /**
  * VerifyEmail Page Component
@@ -13,49 +15,61 @@ const VerifyEmail = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  // Handle code verification
+  // email verification from authcontext
+  const { verifyEmail, resendVerification } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get email from navigation state
+  const email = location.state?.email;
+
+  // Redirect if no email in state
+  useEffect(() => {
+    if (!email) {
+      navigate('/login');
+    }
+  }, [email, navigate]);
+
+  // Handle verification
   const handleVerify = async (code) => {
+    setError('');
     setIsLoading(true);
-    setError("");
 
-    // Temporary mock API call
-    setTimeout(() => {
-      console.log("Verification code:", code);
+    const result = await verifyEmail(code);
 
-      // Simulate error for demonstration (code: 123456)
-      if (code === "123456") {
-        setError(
-          "Unable to send verification email. Please resend code, or try again later."
-        );
-        setIsLoading(false);
-        return;
-      }
-
+    if (result.success) {
       setSuccess(true);
-      setIsLoading(false);
-
-      // Redirect after success
+      
+      // Redirect to dashboard after 2 seconds
       setTimeout(() => {
-        window.location.href = "/login";
-      }, 1500);
-    }, 1500);
+        navigate('/dashboard');
+      }, 2000);
+    } else {
+      setError(result.message || 'Invalid or expired verification code');
+    }
+
+    setIsLoading(false);
   };
 
-  // Handle resend code
+  // Handle resend
   const handleResend = async () => {
+    setError('');
     setIsResending(true);
-    setError("");
 
-    // Temporary mock API call
-    setTimeout(() => {
-      console.log("Resending verification code");
-      alert("Verification code sent to your email!");
-      setIsResending(false);
-    }, 1000);
+    const result = await resendVerification();
+
+    if (result.success) {
+      setError(''); // Clear any previous errors
+      alert('Verification code sent! Check your email.');
+    } else {
+      setError(result.message || 'Failed to resend code');
+    }
+
+    setIsResending(false);
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <VerifyEmailForm
         onVerify={handleVerify}
         onResend={handleResend}

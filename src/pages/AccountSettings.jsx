@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 import ManageAlerts from "../components/ManageAlerts";
 import warningIcon from "../assets/warning-icon.png";
 import PasswordField from "../components/PasswordField";
@@ -18,15 +19,26 @@ import PasswordField from "../components/PasswordField";
  */
 
 const AccountSettings = () => {
+  const { user, updateProfile, changePassword, logout } = useAuth(); // add user, update profile, change password and logout from context
 
   /**
    * user info state
    * stores editable user profile fields
    * backend will replace the default placeholder values
    */
-  const [firstName, setFirstName] = useState("Emily");
-  const [lastName, setLastName] = useState("Chen");
-  const [postalCode, setPostalCode] = useState("T1T 1T1");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+
+  // Load the initial user data and set to state. Change when user changes
+  useEffect(() => {
+    if (user) {
+      setFirstName(user.firstName || "");
+      setLastName(user.lastName || "");
+      setPostalCode(user.postalCode || "");
+      setEmail(user.email || "");
+    }
+  }, [user]);
 
   /**
    * password change state & logic
@@ -42,48 +54,53 @@ const AccountSettings = () => {
   const [globalPasswordError, setGlobalPasswordError] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
 
-  const handlePasswordSave = () => {
-    // reset errors
-    setCurrentPasswordError("");
-    setNewPasswordError("");
-    setConfirmPasswordError("");
-    setGlobalPasswordError("");
+  const handlePasswordSave = async () => {
+      // Reset errors
+      setCurrentPasswordError("");
+      setNewPasswordError("");
+      setConfirmPasswordError("");
+      setGlobalPasswordError("");
 
-    let hasError = false;
+      let hasError = false;
 
-    // required checks
-    if (!currentPassword.trim()) {
-      setCurrentPasswordError("Current password is required.");
-      hasError = true;
-    }
-    if (!newPassword.trim()) {
-      setNewPasswordError("New password is required.");
-      hasError = true;
-    }
-    if (!confirmPassword.trim()) {
-      setConfirmPasswordError("Please confirm your password.");
-      hasError = true;
-    }
+      // Required checks
+      if (!currentPassword.trim()) {
+        setCurrentPasswordError("Current password is required.");
+        hasError = true;
+      }
+      if (!newPassword.trim()) {
+        setNewPasswordError("New password is required.");
+        hasError = true;
+      }
+      if (!confirmPassword.trim()) {
+        setConfirmPasswordError("Please confirm your password.");
+        hasError = true;
+      }
 
-    if (hasError) return;
+      if (hasError) return;
 
-    // matching check
-    if (newPassword !== confirmPassword) {
-      setConfirmPasswordError("Passwords do not match.");
-      setNewPasswordError("Passwords do not match.");
-      setGlobalPasswordError("Passwords do not match.");
-      return;
-    }
+      // Matching check
+      if (newPassword !== confirmPassword) {
+        setConfirmPasswordError("Passwords do not match.");
+        setNewPasswordError("Passwords do not match.");
+        setGlobalPasswordError("Passwords do not match.");
+        return;
+      }
 
-    console.log("Password updated:", { currentPassword, newPassword });
+      // Call backend to change password
+      const result = await changePassword(currentPassword, newPassword); // use changePassword from authcontext (gets the current and new password)
 
-    // TODO: backend here
-
-    // reset fields
-    setShowPasswordFields(false);
-    setNewPassword("");
-    setConfirmPassword("");
-    setCurrentPassword("");
+      if (result.success) {
+        // Success - close fields and reset
+        alert("Password changed successfully!");
+        setShowPasswordFields(false);
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        // Show error
+        setGlobalPasswordError(result.message || "Failed to change password");
+      }
   };
 
   /**
@@ -91,35 +108,57 @@ const AccountSettings = () => {
    * user must confirm by entering their password
    * final deletion will be handled via backend
    */
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deletePassword, setDeletePassword] = useState("");
-  const [deletePasswordError, setDeletePasswordError] = useState("");
-
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     if (!deletePassword.trim()) {
       setDeletePasswordError("Password is required to delete your account.");
       return;
     }
 
-    console.log("Deleting account with password:", deletePassword);
+    try {
+      const token = localStorage.getItem('authToken'); // get current authtoken from storage
+      
+      // Call backend to delete account
+      const response = await fetch('http://localhost:5000/api/users/account', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
 
-    // TODO: backend here
+      const data = await response.json(); // payload from backend call
 
-    // redirect to confirmation page
-    window.location.href = "/account-deleted";
+      if (data.success) {
+        // Logout and redirect
+        logout();
+        window.location.href = "/account-deleted"; // popup that was created
+      } else {
+        setDeletePasswordError(data.message || "Failed to delete account");
+      }
+    } catch (error) {
+      console.error(`Delete account error:, ${error.stack}`);
+      setDeletePasswordError("Failed to delete account. Please try again.");
+    }
   };
 
   /**
    * save account info (first name, last name, postal code)
    * placeholder logic - backend integration will replace console.log
    */
-  const handleSave = () => {
-    console.log("Saving user info...", {
+  const handleSave = async () => {
+    // determine profile data that will be updated
+    const profileData = {
       firstName,
       lastName,
-      postalCode,
-    });
-    // TODO: backend here
+      postalCode
+    };
+
+    const result = await updateProfile(profileData);
+
+    if (result.success) {
+      alert("Profile updated successfully!");
+    } else {
+      alert(result.message || "Failed to update profile");
+    }
   };
 
   // page layout
@@ -160,7 +199,7 @@ const AccountSettings = () => {
           <label className="block text-sm font-medium mb-1">Email</label>
           <input
             type="text"
-            value="emily.chen@gmail.com"
+            value={email}
             disabled
             className="w-full border rounded-lg px-3 py-2 mb-5 bg-gray-100 text-gray-600 text-sm"
           />

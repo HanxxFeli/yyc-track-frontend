@@ -2,6 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import logo from "../assets/logo-white.png";
 import profileIcon from "../assets/profile-icon.png";
+import { useAuth } from '../contexts/AuthContext'; 
 
 /**
  * Header Component
@@ -23,7 +24,10 @@ import profileIcon from "../assets/profile-icon.png";
  * - Authentication logic will be replaced once backend is integrated
  */
 
-const Header = ({ isLoggedIn = false }) => {
+const Header = () => {
+  const { user, logout } = useAuth(); // Get user and logout from context
+  const isLoggedIn = !!user; // Derive isLoggedIn from user, double boolean
+
   // state to track if the dropdown is open
   const [ isDropdownOpen, setIsDropdownOpen ] = useState(false);
 
@@ -44,6 +48,12 @@ const Header = ({ isLoggedIn = false }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return() => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // handle logout 
+  const handleLogout = () => {
+    logout(); // use logout from authcontext and this will clear token and navigate to /login 
+    setIsDropdownOpen(false);
+  };
 
   return (
     // main header container
@@ -125,9 +135,9 @@ const Header = ({ isLoggedIn = false }) => {
             onClick={() => setIsDropdownOpen((prev) => !prev)}
             className="flex items-center gap-2 focus:outline-none"
           >
-            {/* Profile Icon */}
+            {/* Profile Picture if exists else Profile Icon */}
             <img
-              src={profileIcon}
+              src={user.profilePicture || profileIcon}
               className="w-9 h-9 rounded-full hover:opacity-80 transition"
               alt="Profile"
             />
@@ -147,6 +157,18 @@ const Header = ({ isLoggedIn = false }) => {
           {/* Dropdown Menu */}
           {isDropdownOpen && (
             <div className="absolute right-0 mt-3 w-48 bg-white text-black rounded-lg shadow-lg p-2 z-50 border border-gray-200">
+              
+              {/* User name */}
+              <div className="px-3 py-2 border-b border-gray-200">
+                <p className="text-sm font-semibold text-gray-800">
+                  {user.firstName} {user.lastName}
+                </p>
+                <p className="text-xs text-gray-500 truncate">
+                  {user.email}
+                </p>
+              </div>
+              
+              {/* Account Settings Link */}
               <Link
                 to="/account-settings"
                 className="block px-3 py-2 hover:bg-gray-100 rounded-md text-sm"
@@ -154,12 +176,10 @@ const Header = ({ isLoggedIn = false }) => {
                 Account Settings
               </Link>
 
+              {/* Logout Button */}
               <button
                 type="button"
-                onClick={() => {
-                  localStorage.removeItem("token");   // logs out user for now
-                  window.location.reload();           // refreshes so the header can update
-                }}
+                onClick={handleLogout} 
                 className="block w-full text-left px-3 py-2 hover:bg-gray-100 rounded-md text-sm text-red-600"
               >
                 Logout

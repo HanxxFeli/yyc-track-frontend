@@ -5,6 +5,7 @@ const AuthCallback = () => {
     const [searchParams] = useSearchParams(); // allows reading the URL query parameters
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const token = searchParams.get('needsPostalCode') === 'true';
 
     useEffect(() => { 
         // extract data from url using searchParams
@@ -18,6 +19,7 @@ const AuthCallback = () => {
         }
 
         // save token to local storage for access
+        setToken(token);
         localStorage.setItem('token', token)
 
         // redirect the user depending on if they need the postalCode or not

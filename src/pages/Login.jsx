@@ -3,6 +3,8 @@ import LoginInputField from "../components/LoginInputField";
 import LoginPasswordField from "../components/LoginPasswordField";
 import LoginSubmitButton from "../components/LoginSubmitButton";
 import { AiOutlineWarning } from "react-icons/ai";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,23 +12,33 @@ export default function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  // login related states
+  const { login } = useAuth(); // use login from authcontext
+  const navigate = useNavigate();
+  
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
 
-    // Temporary fake login logic for testing login flow
-    setTimeout(() => {
-      if (email !== "test@gmail.com" || password !== "password123") {
-        setError("Incorrect email or password.");
-        setIsLoading(false);
+    // Call login from context
+    const result = await login(email, password); // login uses email and password params
+
+    if (result.success) {
+      // Check if email is verified
+      if (!result.user.isEmailVerified) {
+        navigate('/verify-email', { 
+          state: { email: email } 
+        });
       } else {
-        setError("");
-        setIsLoading(false);
-        // Save token for header state (temporary until backend)
-        localStorage.setItem("token", "dummy-token");
-        window.location.href = "/";
+        navigate('/dashboard');
       }
-    }, 800);
+    } else {
+      setError(result.message || 'Incorrect email or password.');
+    }
+
+    setIsLoading(false);
   };
 
     // Handle Google sign-in 
@@ -87,7 +99,7 @@ export default function Login() {
               <span className="text-gray-700 text-sm">Remember me</span>
             </label>
 
-            <a href="#" className="text-[#BC0B2A] text-sm hover:underline">
+            <a href="/forgot-password" className="text-[#BC0B2A] text-sm hover:underline">
               Forgot password?
             </a>
           </div>
