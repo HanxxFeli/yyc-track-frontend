@@ -18,7 +18,9 @@ import Footer from './components/Footer';
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
 import AccountSettings from "./pages/AccountSettings";
+import ErrorPage from "./pages/ErrorPage";
 import AccountDeleted from './pages/AccountDeleted';
 import AuthLandingPage from './pages/AuthLandingPage';
 import AuthCallback from './pages/AuthCallback';
@@ -66,6 +68,9 @@ const App = () => {
             <Route path='/complete-profile' element={<CompleteProfile />} />
             {/* Dashboard landing page after user logs in */}
             <Route path='/dashboard' element={<AuthLandingPage />} />
+              
+            {/* 404 catch-all route - must be last */}
+            <Route path="*" element={<ErrorPage />} />
           </Routes>
           
         </main>
