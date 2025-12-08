@@ -139,6 +139,7 @@ const Header = () => {
             <img
               src={user.profilePicture || profileIcon}
               className="w-9 h-9 rounded-full hover:opacity-80 transition"
+              referrerPolicy="no-referrer"
               alt="Profile"
             />
 
