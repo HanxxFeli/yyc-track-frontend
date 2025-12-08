@@ -1,23 +1,23 @@
-import { useState } from 'react';
-import InputField from '../components/InputField';
-import PasswordField from '../components/PasswordField';
-import PasswordRequirements from '../components/PasswordRequirements';
-import CheckboxField from '../components/CheckboxField';
-import SubmitButton from '../components/SubmitButton';
-import GoogleSignInButton from '../components/GoogleSignInButton';
-import SuccessMessage from '../components/SuccessMessage';
+import { useState } from "react";
+import InputField from "../components/InputField";
+import PasswordField from "../components/PasswordField";
+import PasswordRequirements from "../components/PasswordRequirements";
+import CheckboxField from "../components/CheckboxField";
+import SubmitButton from "../components/SubmitButton";
+import GoogleSignInButton from "../components/GoogleSignInButton";
+import SuccessMessage from "../components/SuccessMessage";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 /**
  * Register Page Component
- * 
+ *
  * Main registration page that handles:
  * - Form state management
  * - Input validation (client-side)
  * - Form submission
  * - Success/error states
- * 
+ *
  * Form fields:
  * - First Name
  * - Last Name
@@ -30,13 +30,13 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
   // Main form data state
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    postalCode: '',
-    agreeToTerms: false
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    postalCode: "",
+    agreeToTerms: false,
   });
 
   const [errors, setErrors] = useState({}); // Error messages for each field
@@ -50,14 +50,14 @@ const Register = () => {
   // Handle all input changes (text inputs and checkbox)
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
-    
+
     // Clear error for this field when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -67,51 +67,51 @@ const Register = () => {
 
     // Validate first name
     if (!formData.firstName.trim()) {
-      newErrors.firstName = 'First name is required';
+      newErrors.firstName = "First name is required";
     }
 
     // Validate last name
     if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
+      newErrors.lastName = "Last name is required";
     }
 
     // Validate email
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = "Email is invalid";
     }
 
     // Validate password (based on requirements)
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else {
       if (formData.password.length < 7) {
-        newErrors.password = 'Password must be at least 7 characters';
+        newErrors.password = "Password must be at least 7 characters";
       } else if (!/[a-z]/.test(formData.password)) {
-        newErrors.password = 'Password must contain a lowercase letter';
+        newErrors.password = "Password must contain a lowercase letter";
       } else if (!/[A-Z]/.test(formData.password)) {
-        newErrors.password = 'Password must contain an uppercase letter';
+        newErrors.password = "Password must contain an uppercase letter";
       } else if (!/[^a-zA-Z0-9]/.test(formData.password)) {
-        newErrors.password = 'Password must contain a special character';
+        newErrors.password = "Password must contain a special character";
       }
     }
 
     // Validate confirm password
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = "Please confirm your password";
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
     // Validate postal code
     if (!formData.postalCode.trim()) {
-      newErrors.postalCode = 'Postal code is required';
+      newErrors.postalCode = "Postal code is required";
     }
 
     // Validate terms agreement
     if (!formData.agreeToTerms) {
-      newErrors.agreeToTerms = 'You must agree to the terms and conditions';
+      newErrors.agreeToTerms = "You must agree to the terms and conditions";
     }
 
     return newErrors;
@@ -170,11 +170,14 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-md w-full max-w-sm p-6">
-        
         {/* Page header */}
         <div className="mb-6">
-          <h1 className="text-xl font-semibold text-gray-900 mb-1">Create an account</h1>
-          <p className="text-xs text-gray-600">Sign up to access real-time station feedback and alerts.</p>
+          <h1 className="text-xl font-semibold text-gray-900 mb-1">
+            Create an account
+          </h1>
+          <p className="text-xs text-gray-600">
+            Sign up to access real-time station feedback and alerts.
+          </p>
         </div>
 
         {/* Success message (shown after registration) */}
@@ -194,7 +197,7 @@ const Register = () => {
                 value={formData.firstName}
                 onChange={handleChange}
                 className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-[#BC0B2A] text-sm ${
-                  errors.firstName ? 'border-red-500' : 'border-gray-300'
+                  errors.firstName ? "border-red-500" : "border-gray-300"
                 }`}
               />
               {errors.firstName && (
@@ -211,7 +214,7 @@ const Register = () => {
                 value={formData.lastName}
                 onChange={handleChange}
                 className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-[#BC0B2A] text-sm ${
-                  errors.lastName ? 'border-red-500' : 'border-gray-300'
+                  errors.lastName ? "border-red-500" : "border-gray-300"
                 }`}
               />
               {errors.lastName && (
@@ -242,8 +245,14 @@ const Register = () => {
           />
 
           {/* Password requirements */}
-          <PasswordRequirements />
+          <PasswordRequirements
+            password={formData.password}
+            hasError={!!errors.password}
+          />
 
+          {/* for testing purposes */}
+          {/* {console.log("Password error:", errors.password)}   */}
+          
           {/* Confirm password input */}
           <PasswordField
             label="Confirm Password"
@@ -268,7 +277,7 @@ const Register = () => {
           <CheckboxField
             label={
               <span>
-                I agree to the{' '}
+                I agree to the{" "}
                 <a href="/terms" className="text-[#BC0B2A] underline">
                   Terms and Conditions
                 </a>
@@ -295,8 +304,11 @@ const Register = () => {
         {/* Login link for existing users */}
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-600">
-            Already have an account?{' '}
-            <a href="/login" className="text-[#BC0B2A] font-medium hover:underline">
+            Already have an account?{" "}
+            <a
+              href="/login"
+              className="text-[#BC0B2A] font-medium hover:underline"
+            >
               Login
             </a>
           </p>
