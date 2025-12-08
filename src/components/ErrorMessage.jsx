@@ -1,20 +1,54 @@
-// Error message box with warning icon
+/**
+ * 
+ * Displays password requirements that disappear when met
+ * Only shows unmet requirements as user types
+ * Shows in red when there's a password error
+ * 
+ */
+const PasswordRequirements = ({ password = '', hasError = false }) => {
+  // Check each requirement
+  const requirements = [
+    {
+      text: 'At least one special character',
+      met: /[^a-zA-Z0-9]/.test(password)
+    },
+    {
+      text: 'At least one lowercase letter',
+      met: /[a-z]/.test(password)
+    },
+    {
+      text: 'At least one uppercase letter',
+      met: /[A-Z]/.test(password)
+    },
+    {
+      text: 'At least 7 characters',
+      met: password.length >= 7
+    }
+  ];
 
-const ErrorMessage = ({ message, className = '' }) => {
-  if (!message) return null;
+  // When theres an error, show all requirements that aren't met
+  // When no error, show all unmet requirements normally
+  const displayRequirements = hasError 
+    ? requirements.filter(req => !req.met)
+    : requirements.filter(req => !req.met);
+
+  // Dont show anything if all requirements are met
+  if (displayRequirements.length === 0) return null;
 
   return (
-    <div className={`w-full max-w-md p-4 bg-red-50 border-2 border-[#BC0B2A] rounded-lg flex items-start gap-3 ${className}`}>
-      <div className="flex-shrink-0 mt-0.5">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="text-[#BC0B2A]">
-          <path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z" fill="currentColor"/>
-        </svg>
-      </div>
-      <p className="text-sm text-gray-700 flex-1">
-        {message}
+    <div className="mb-4">
+      <p className={`text-xs font-medium mb-2 ${hasError ? 'text-red-600' : 'text-gray-700'}`}>
+        Password Requirements:
       </p>
+      <ul className="text-xs space-y-1 list-disc list-inside">
+        {displayRequirements.map((req, index) => (
+          <li key={index} className={hasError ? 'text-red-600' : 'text-gray-600'}>
+            {req.text}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
-export default ErrorMessage;
+export default PasswordRequirements;
