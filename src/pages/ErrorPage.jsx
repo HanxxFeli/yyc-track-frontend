@@ -1,58 +1,50 @@
+import PrimaryButton from "../components/PrimaryButton";
+import SecondaryButton from "../components/SecondaryButton";
+
 /**
- * PasswordRequirements Component
- * 
- * Displays password requirements that disappear when met
- * Only shows unmet requirements as user types
- * Shows in red when there's a password error
- * 
- * Props:
- * - password: The password string to evaluate
- * - hasError: Boolean indicating if password field has an error
+ * displays when user navigates to a non-existent route
+ * provides options to go back home or try again
  */
-const PasswordRequirements = ({ password = '', hasError = false }) => {
-  // Check each requirement
-  const requirements = [
-    {
-      text: 'At least one special character',
-      met: /[^a-zA-Z0-9]/.test(password)
-    },
-    {
-      text: 'At least one lowercase letter',
-      met: /[a-z]/.test(password)
-    },
-    {
-      text: 'At least one uppercase letter',
-      met: /[A-Z]/.test(password)
-    },
-    {
-      text: 'At least 7 characters',
-      met: password.length >= 7
-    }
-  ];
+const ErrorPage = () => {
+  // Navigate back to home page
+  const handleBackToHome = () => {
+    window.location.href = "/";
+  };
 
-  // When there's an error, show all requirements that aren't met
-  // When no error, show all unmet requirements normally
-  const displayRequirements = hasError 
-    ? requirements.filter(req => !req.met)
-    : requirements.filter(req => !req.met);
-
-  // Don't show anything if all requirements are met
-  if (displayRequirements.length === 0) return null;
+  // Refresh the current page
+  const handleTryAgain = () => {
+    window.location.reload();
+  };
 
   return (
-    <div className="mb-4">
-      <p className={`text-xs font-medium mb-2 ${hasError ? 'text-red-600' : 'text-gray-700'}`}>
-        Password Requirements:
-      </p>
-      <ul className="text-xs space-y-1 list-disc list-inside">
-        {displayRequirements.map((req, index) => (
-          <li key={index} className={hasError ? 'text-red-600' : 'text-gray-600'}>
-            {req.text}
-          </li>
-        ))}
-      </ul>
+    <div className="flex items-center justify-center py-20">
+      <div className="text-center max-w-md w-full">
+        {/* Error heading */}
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          Page Not Found
+        </h1>
+
+        {/* Error description */}
+        <p className="text-gray-600 mb-8 text-base">
+          The page you're looking for does not exist or has been removed.
+        </p>
+
+        {/* Action buttons */}
+        <div className="flex gap-3 justify-center">
+          <div className="w-40">
+            <PrimaryButton onClick={handleBackToHome}>
+              Back to Home
+            </PrimaryButton>
+          </div>
+          <div className="w-40">
+            <SecondaryButton onClick={handleTryAgain}>
+              Try Again
+            </SecondaryButton>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default PasswordRequirements;
+export default ErrorPage;
