@@ -26,17 +26,10 @@ export default function Login() {
     const result = await login(email, password); // login uses email and password params
 
     if (result.success) {
-      // Check if email is verified
-      if (!result.user.isEmailVerified) {
-        navigate('/verify-email', { 
-          state: { email: email } 
-        });
-      } else {
-        navigate('/dashboard');
-      }
+      navigate('/dashboard') // always go to dashboard after successful login
     } else {
       setError(result.message || 'Incorrect email or password.');
-    }
+    } 
 
     setIsLoading(false);
   };
@@ -114,9 +107,13 @@ export default function Login() {
 
           {/* Google Login */}
           <button
+          
             type="button"
             className="w-full flex items-center justify-center gap-3 border py-3 rounded-lg hover:bg-gray-50 transition"
-            onClick={handleGoogleSignIn}
+            onClick={(e) => {
+              e.preventDefault(); // prevent google button from submitting
+              handleGoogleSignIn(e)
+            }}
           >
             <img
               src="https://developers.google.com/identity/images/g-logo.png"

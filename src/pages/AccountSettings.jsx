@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import ManageAlerts from "../components/ManageAlerts";
 import warningIcon from "../assets/warning-icon.png";
@@ -21,6 +21,17 @@ import PasswordField from "../components/PasswordField";
 const AccountSettings = () => {
   const { user, updateProfile, changePassword, logout } = useAuth(); // add user, update profile, change password and logout from context
 
+  console.log(`AccountSettings - User from context: ${user}`) // check the current user 
+
+  // add handling for loading state to check 
+  if (!user) { 
+    return ( 
+      <div className="flex justify-center items-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    )
+  }
+
   /**
    * user info state
    * stores editable user profile fields
@@ -29,9 +40,16 @@ const AccountSettings = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [postalCode, setPostalCode] = useState("");
+  const [email, setEmail] = useState("");
+
+  // Delete account state
+  const [showDeleteModal, setShowDeleteModal] = useState(false); 
+  const [deletePassword, setDeletePassword] = useState(""); 
+  const [deletePasswordError, setDeletePasswordError] = useState(""); 
 
   // Load the initial user data and set to state. Change when user changes
   useEffect(() => {
+    console.log(`useEffect - User ${user}`) // check if the user state is being passed properly
     if (user) {
       setFirstName(user.firstName || "");
       setLastName(user.lastName || "");
@@ -209,7 +227,7 @@ const AccountSettings = () => {
             <label className="text-sm font-medium">Password</label>
 
             {/* show "change" button only if fields are collapsed */}
-            {!showPasswordFields && (
+            {!showPasswordFields && user && user?.authMethod === 'local' && (
               <button
                 onClick={() => setShowPasswordFields(true)}
                 className="text-[#BC0B2A] text-sm font-semibold hover:underline"
@@ -326,9 +344,6 @@ const AccountSettings = () => {
 
           {/* save changes buttons */}
           <div className="flex justify-end gap-4">
-            <button className="px-4 py-2 rounded-md border border-[#BC0B2A] text-[#BC0B2A] text-sm hover:bg-red-50">
-              Cancel
-            </button>
             <button
               onClick={handleSave}
               className="px-5 py-2 bg-[#BC0B2A] text-white rounded-md text-sm hover:bg-[#A30A26]"

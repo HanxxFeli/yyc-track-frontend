@@ -84,6 +84,7 @@ export const AuthProvider = ({ children }) => {
                 // Save token but don't set user yet (email not verified)
                 localStorage.setItem('authToken', data.token);
                 setToken(data.token);
+                setUser(data.user) // set the user data after getting registered to the user
                 return { success: true, user: data.user };
             } else {
                 return { success: false, message: data.message };
@@ -112,9 +113,9 @@ export const AuthProvider = ({ children }) => {
 
             if (data.success) {
                 localStorage.setItem('authToken', data.token);
-                setToken(data.token);
-                setUser(data.user);
-                return { success: true, user: data.user };
+                setToken(data.token); 
+                setUser(data.user); 
+                return { success: true, user: data.user }; 
             } else {
                 return { success: false, message: data.message };
             }
@@ -229,6 +230,30 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    // Set Authentication from Token
+    const setAuthFromToken = async (authToken) => { 
+        try { 
+            const response = await fetch(`${API_URL}/auth/me`, { 
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            })
+
+            if (response.ok) { 
+                const data = await response.json();
+                setUser(data.user) // get the authorization then add a layer to set user as the user from payload
+                setToken(authToken) // ensure authtoken value is updated once user logs in
+                return {success: true}
+            } else { 
+                localStorage.removeItem('authToken')
+                return {success: false}
+            }
+        }
+        catch (error) { 
+
+        }
+    }
+
     const value = {
         user,
         token,
@@ -239,7 +264,8 @@ export const AuthProvider = ({ children }) => {
         verifyEmail,
         resendVerification,
         updateProfile,
-        changePassword
+        changePassword,
+        setAuthFromToken,
     };
 
     return (

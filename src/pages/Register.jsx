@@ -181,7 +181,7 @@ const Register = () => {
         {success && <SuccessMessage message="Account created successfully!" />}
 
         {/* Registration form */}
-        <div>
+        <form onSubmit={handleSubmit}>
           {/* First and Last Name in a row */}
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div>
@@ -281,7 +281,7 @@ const Register = () => {
           />
 
           {/* Submit button */}
-          <SubmitButton isLoading={isLoading} onClick={handleSubmit}>
+          <SubmitButton isLoading={isLoading}>
             Create Account
           </SubmitButton>
 
@@ -290,7 +290,7 @@ const Register = () => {
 
           {/* Google sign-in button */}
           <GoogleSignInButton onClick={handleGoogleSignIn} />
-        </div>
+        </form>
 
         {/* Login link for existing users */}
         <div className="mt-6 text-center">

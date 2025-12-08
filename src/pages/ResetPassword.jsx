@@ -60,7 +60,7 @@ const ResetPassword = () => {
         // Redirect to login after 3 seconds
         setTimeout(() => {
           navigate('/login');
-        }, 3000);
+        }, 1000);
       } else {
         setError(data.message || 'Failed to reset password');
       }
