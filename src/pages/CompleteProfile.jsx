@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const CompleteProfile = () => { 
     const [postalCode, setPostalCode] = useState('')
     const [error, setError] = useState('')
-    const [loading, setLoading] = useState('')
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => { 
@@ -25,7 +25,7 @@ const CompleteProfile = () => {
 
         try { 
             // acquire token from local storage 
-            const token = localStorage.getItem('token') 
+            const token = localStorage.getItem('authToken') 
 
             // ask user to login again if the token is not acquired
             if (!token) { 
@@ -41,11 +41,12 @@ const CompleteProfile = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ postalCode})
+                body: JSON.stringify({ postalCode: postalCode.trim()})
             });
 
             // get and convert the data from response
             const data = await response.json(); // convert response into an object
+            console.log(`Complete profile response: ${data}`); // additional logging for checking
 
             // payload will contain a success and message field so get the value from those 
             if (data.success) { 
@@ -56,6 +57,7 @@ const CompleteProfile = () => {
 
         }
         catch (error) { 
+            console.error(`Error completing profile ${error}`);
             setError('Failed to update profile')
         }
         finally { 

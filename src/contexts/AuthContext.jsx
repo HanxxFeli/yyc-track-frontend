@@ -243,14 +243,16 @@ export const AuthProvider = ({ children }) => {
                 const data = await response.json();
                 setUser(data.user) // get the authorization then add a layer to set user as the user from payload
                 setToken(authToken) // ensure authtoken value is updated once user logs in
-                return {success: true}
+                return {success: true, user: data.user}
             } else { 
                 localStorage.removeItem('authToken')
                 return {success: false}
             }
         }
         catch (error) { 
-
+            console.error(`Error in setAuthFromToken: ${error}`)
+            localStorage.removeItem('authToken')
+            return {success: false, error: error.message}
         }
     }
 
