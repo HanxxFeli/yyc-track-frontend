@@ -6,6 +6,8 @@ import CheckboxField from "../components/CheckboxField";
 import SubmitButton from "../components/SubmitButton";
 import GoogleSignInButton from "../components/GoogleSignInButton";
 import SuccessMessage from "../components/SuccessMessage";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Register Page Component
@@ -37,14 +39,13 @@ const Register = () => {
     agreeToTerms: false,
   });
 
-  // Error messages for each field
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({}); // Error messages for each field
+  const [isLoading, setIsLoading] = useState(false); // Loading state for submit button
+  const [success, setSuccess] = useState(false); // Success state to show success message
 
-  // Loading state for submit button
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Success state to show success message
-  const [success, setSuccess] = useState(false);
+  // registration related states
+  const { register } = useAuth(); // use login from authcontext
+  const navigate = useNavigate();
 
   // Handle all input changes (text inputs and checkbox)
   const handleChange = (e) => {
@@ -120,7 +121,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Run validation
+    // Run validation for the fields
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -129,40 +130,43 @@ const Register = () => {
 
     setIsLoading(true);
 
-    // Replace this with actual API call
-    // Temporary mock API call for testing
-    setTimeout(() => {
-      console.log("Registration data ready for backend:", {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-        postalCode: formData.postalCode,
-      });
+    // get data from the fields and create registration data payload for backend
+    const registrationData = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      postalCode: formData.postalCode,
+    };
 
+    // Call register from context
+    const result = await register(registrationData);
+
+    if (result.success) {
+      // Show success message briefly
       setSuccess(true);
-      setIsLoading(false);
 
-      // Reset form after 3 seconds
+      // Redirect to verify email after 1.5 seconds
       setTimeout(() => {
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-          postalCode: "",
-          agreeToTerms: false,
+        navigate("/verify-email", {
+          state: { email: formData.email },
         });
-        setSuccess(false);
-      }, 3000);
-    }, 1500);
+      }, 1500);
+    } else {
+      // Show error
+      setErrors({
+        submit: result.message || "Registration failed. Please try again.",
+      });
+      setIsLoading(false);
+    }
   };
 
-  // Handle Google sign-in (placeholder)
-  const handleGoogleSignIn = () => {
+  // Handle Google sign-in
+  const handleGoogleSignIn = (e) => {
+    e.preventDefault();
     console.log("Google sign-in clicked");
     // Add Google OAuth logic here
+    window.location.href = "http://localhost:5000/api/auth/google";
   };
 
   return (
@@ -182,7 +186,7 @@ const Register = () => {
         {success && <SuccessMessage message="Account created successfully!" />}
 
         {/* Registration form */}
-        <div>
+        <form onSubmit={handleSubmit}>
           {/* First and Last Name in a row */}
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div>
@@ -248,9 +252,9 @@ const Register = () => {
             hasError={!!errors.password}
           />
 
-          {/* for testing purposes */}
-          {/* {console.log("Password error:", errors.password)}   */}
-          
+          {/* for testing purposes - xander */}
+          {console.log("Password error:", errors.password)}
+
           {/* Confirm password input */}
           <PasswordField
             label="Confirm Password"
@@ -288,16 +292,14 @@ const Register = () => {
           />
 
           {/* Submit button */}
-          <SubmitButton isLoading={isLoading} onClick={handleSubmit}>
-            Create Account
-          </SubmitButton>
+          <SubmitButton isLoading={isLoading}>Create Account</SubmitButton>
 
           {/* Divider */}
           <div className="my-4 text-center text-xs text-gray-500">or</div>
 
           {/* Google sign-in button */}
           <GoogleSignInButton onClick={handleGoogleSignIn} />
-        </div>
+        </form>
 
         {/* Login link for existing users */}
         <div className="mt-6 text-center">
