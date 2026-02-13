@@ -131,15 +131,15 @@ const StationFilter = ({ onFilterChange, isAuthenticated = false}) => {
                     <div className="flex flex-col gap-2.5">
                     <div className="flex items-center">
                         <span className="w-4 h-4 rounded-full bg-green-500 mr-2.5"></span>
-                        <span className="text-sm text-gray-800">Good (80-100)</span>
+                        <span className="text-sm text-gray-800">Good (4-5)</span>
                     </div>
                     <div className="flex items-center">
                         <span className="w-4 h-4 rounded-full bg-amber-500 mr-2.5"></span>
-                        <span className="text-sm text-gray-800">Moderate (60-79)</span>
+                        <span className="text-sm text-gray-800">Moderate (2-4)</span>
                     </div>
                     <div className="flex items-center">
                         <span className="w-4 h-4 rounded-full bg-red-500 mr-2.5"></span>
-                        <span className="text-sm text-gray-800">Poor (0-59)</span>
+                        <span className="text-sm text-gray-800">Poor (0-2)</span>
                     </div>
                     </div>
                 </div>
