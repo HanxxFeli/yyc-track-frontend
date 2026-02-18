@@ -17,6 +17,7 @@ import AuthCallback from './pages/AuthCallback';
 import CompleteProfile from './pages/CompleteProfile'
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import AdminLogin from './pages/AdminLogin';
 
 /**
  * App Component
@@ -55,6 +56,7 @@ const AppContent = () => {
           <Route path="/" element={<Home />} />
           <Route path="/map" element={<Home />} />
           <Route path="/stations" element={<Home />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
 
           {/* User Login and Registration pages */}
           <Route path="/login" element={<Login />} />
