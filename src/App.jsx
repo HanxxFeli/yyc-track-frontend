@@ -1,6 +1,6 @@
 // page imports (these are placeholder components for now)
 // NOTE FOR ENO: Make sure your page component names match exactly
-import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, BrowserRouter, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
@@ -18,6 +18,8 @@ import CompleteProfile from './pages/CompleteProfile'
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminHeader from './components/admin/AdminHeader';
 
 /**
  * App Component
@@ -43,11 +45,15 @@ const App = () => {
 
 // App Content will contain the app structure 
 const AppContent = () => {
+  const location = useLocation();
+
+  const isAdminRoute = location.pathname.startsWith("/admin");
+  const isAdminLogin = location.pathname === "/admin/login";
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F5F6F7]">
-      {/* Global header */}
-      <Header />
+      {/* Show AdminHeader ONLY for /admin routes */}
+      {isAdminRoute && !isAdminLogin ? <AdminHeader /> : <Header />}
 
       {/* main content area where the page is displayed */}
       <main className="flex-grow px-10 py-10">
@@ -57,6 +63,9 @@ const AppContent = () => {
           <Route path="/map" element={<Home />} />
           <Route path="/stations" element={<Home />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
           {/* User Login and Registration pages */}
           <Route path="/login" element={<Login />} />
