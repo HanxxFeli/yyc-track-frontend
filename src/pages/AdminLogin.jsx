@@ -13,26 +13,20 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AiOutlineWarning } from "react-icons/ai";
 
+import { useAdminAuth } from "../contexts/AdminAuthContext";
 import LoginInputField from "../components/LoginInputField";
 import LoginPasswordField from "../components/LoginPasswordField";
 import LoginSubmitButton from "../components/LoginSubmitButton";
 
 export default function AdminLogin() {
+
+  const { login } = useAdminAuth(); // use login function from AdminAuthContext
+
   /**
    * React Router navigation hook
    * Used to redirect admin after successful login
    */
   const navigate = useNavigate();
-
-  /**
-   * API base URL for backend requests
-   */
-  const API_URL = "http://localhost:5000/api";
-
-  /**
-   * Key used to store admin JWT token in localStorage
-   */
-  const ADMIN_TOKEN_KEY = "adminAuthToken";
 
   // form state
   const [email, setEmail] = useState("");
@@ -42,45 +36,21 @@ export default function AdminLogin() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  /**
-   * Handles admin login form submission
-   * 
-   * workflow:
-   * 1. prevent default form refresh
-   * 2. send email + password to backend
-   * 3. if successful:
-   *    - store jwt token
-   *    - redirect to admin dashboard
-   * 4. if failed: 
-   *    - displays error message
-   */
   const handleAdminLogin = async (e) => {
     e.preventDefault();
-    setError("");
     setIsLoading(true);
+    setError("");
 
-    try {
-      const res = await fetch(`${API_URL}/auth/admin/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        localStorage.setItem(ADMIN_TOKEN_KEY, data.token);
-        navigate("/admin/dashboard");
-      } else {
-        setError(data.message || "Incorrect email or password.");
-      }
-    } catch (err) {
-      console.error("Admin login error:", err);
-      setError("Admin login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
+    const result = await login(email, password); // call login function from context with email and password
+    
+    if (!result.success) {
+      setError(result.message || "Incorrect email or password.");
     }
-  };
+    else{
+      navigate("/admin/dashboard"); // redirect to admin dashboard after successful login
+    }
+    setIsLoading(false);
+  }
 
   return (
     <div className="flex justify-center bg-gray-100 pt-16 pb-20">

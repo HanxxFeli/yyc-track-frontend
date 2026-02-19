@@ -20,6 +20,8 @@ import ResetPassword from './pages/ResetPassword';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminHeader from './components/admin/AdminHeader';
+import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
+import { AdminAuthProvider } from './contexts/AdminAuthContext';
 
 /**
  * App Component
@@ -62,10 +64,27 @@ const AppContent = () => {
           <Route path="/" element={<Home />} />
           <Route path="/map" element={<Home />} />
           <Route path="/stations" element={<Home />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          
+          {/* Admin Routes */}
+          <Route
+            path='/admin/*'
+            element={
+              <AdminAuthProvider>
+                <Routes>
+                  <Route path="login" element={<AdminLogin />} />
+                  {/* All admin routes should be protected */}
+                  <Route 
+                    path='dashboard'
+                    element={
+                      <AdminProtectedRoute>
+                        <AdminDashboard />
+                      </AdminProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </AdminAuthProvider>
+            }
+          /> 
 
           {/* User Login and Registration pages */}
           <Route path="/login" element={<Login />} />
