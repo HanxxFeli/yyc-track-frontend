@@ -1,5 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useAuth } from '../../contexts/AuthContext';
 import logo from "../../assets/AdminLogo.svg";
 import profileIcon from "../../assets/profile-icon.png";
 
@@ -13,6 +14,8 @@ import profileIcon from "../../assets/profile-icon.png";
  *  - Logout will clear admin token and return to admin login
  */
 export default function AdminHeader() {
+
+  const {logout} = useAuth();
   const navigate = useNavigate();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -31,7 +34,7 @@ export default function AdminHeader() {
   }, []);
 
   const handleAdminLogout = () => {
-    localStorage.removeItem("adminAuthToken");
+    logout(); // use logout from AdminAuthContext and this will clear token and navigate to /admin/login
     setIsDropdownOpen(false);
     navigate("/admin/login");
   };
