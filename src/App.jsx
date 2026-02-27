@@ -17,6 +17,8 @@ import AuthCallback from './pages/AuthCallback';
 import CompleteProfile from './pages/CompleteProfile'
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import Stations from "./pages/Stations";
+import StationDetails from "./pages/StationDetails";
 
 /**
  * App Component
@@ -54,7 +56,8 @@ const AppContent = () => {
           {/* public pages */}
           <Route path="/" element={<Home />} />
           <Route path="/map" element={<Home />} />
-          <Route path="/stations" element={<Home />} />
+          <Route path="/stations" element={<Stations />} />
+          <Route path="/stations/:id" element={<StationDetails />} />
 
           {/* User Login and Registration pages */}
           <Route path="/login" element={<Login />} />
