@@ -18,6 +18,7 @@ import CompleteProfile from './pages/CompleteProfile'
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Stations from './pages/Stations';
+import StationMonitoring from './pages/StationMonitoring';
 
 /**
  * App Component
@@ -56,6 +57,9 @@ const AppContent = () => {
           <Route path="/" element={<Home />} />
           <Route path="/map" element={<Home />} />
           <Route path="/stations" element={<Stations />} />
+
+          {/* will need to be moved to protected */}
+          <Route path="/analytics" element={<StationMonitoring />} />
 
           {/* User Login and Registration pages */}
           <Route path="/login" element={<Login />} />
