@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import PasswordField from '../components/PasswordField';
+import PasswordField from '../components/common/PasswordField';
 
 const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState('');

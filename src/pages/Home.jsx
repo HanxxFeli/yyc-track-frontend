@@ -1,8 +1,8 @@
 import { useState } from "react";
-import 'leaflet/dist/leaflet.css';
+// import 'leaflet/dist/leaflet.css';
 
-import StationFilter from "../components/StationFIlter";
-import CalgaryMap from "../components/CalgaryMap";
+import StationFilter from "../components/map/StationFIlter";
+import CalgaryMap from "../components/map/CalgaryMap";
 
 export default function Home() { 
   const [filters, setFilters] = useState({

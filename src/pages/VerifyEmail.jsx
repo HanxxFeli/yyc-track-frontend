@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import VerifyEmailForm from '../components/VerifyEmailForm';
+import VerifyEmailForm from '../components/auth/VerifyEmailForm';
 
 /**
  * VerifyEmail Page Component

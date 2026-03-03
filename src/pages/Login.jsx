@@ -1,7 +1,7 @@
 import { useState } from "react";
-import LoginInputField from "../components/LoginInputField";
-import LoginPasswordField from "../components/LoginPasswordField";
-import LoginSubmitButton from "../components/LoginSubmitButton";
+import LoginInputField from "../components/auth/LoginInputField";
+import LoginPasswordField from "../components/auth/LoginPasswordField";
+import LoginSubmitButton from "../components/auth/LoginSubmitButton";
 import { AiOutlineWarning } from "react-icons/ai";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";

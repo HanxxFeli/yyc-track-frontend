@@ -1,8 +1,8 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import logo from "../assets/logo-white.png";
-import profileIcon from "../assets/profile-icon.png";
-import { useAuth } from '../contexts/AuthContext'; 
+import logo from "../../assets/logo-white.png";
+import profileIcon from "../../assets/profile-icon.png";
+import { useAuth } from '../../contexts/AuthContext'; 
 
 /**
  * Header Component
