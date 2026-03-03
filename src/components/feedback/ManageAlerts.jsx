@@ -1,4 +1,4 @@
-import trashIcon from "../assets/trash-icon.png";
+import trashIcon from "../../assets/trash-icon.png";
 
 const ManageAlerts = () => {
   return (
