@@ -1,11 +1,11 @@
 import { useState } from "react";
-import InputField from "../components/InputField";
-import PasswordField from "../components/PasswordField";
-import PasswordRequirements from "../components/PasswordRequirements";
-import CheckboxField from "../components/CheckboxField";
-import SubmitButton from "../components/SubmitButton";
-import GoogleSignInButton from "../components/GoogleSignInButton";
-import SuccessMessage from "../components/SuccessMessage";
+import InputField from "../components/common/InputField";
+import PasswordField from "../components/common/PasswordField";
+import PasswordRequirements from "../components/password/PasswordRequirements";
+import CheckboxField from "../components/common/CheckboxField";
+import SubmitButton from "../components/buttons/SubmitButton";
+import GoogleSignInButton from "../components/auth/GoogleSignInButton";
+import SuccessMessage from "../components/common/SuccessMessage";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
