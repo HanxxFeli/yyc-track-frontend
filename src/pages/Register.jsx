@@ -168,14 +168,14 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-md w-full max-w-sm p-6">
-        {/* Page header */}
-        <div className="mb-6">
-          <h1 className="text-xl font-semibold text-gray-900 mb-1">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6 py-6 sm:py-10">
+      <div className="bg-white rounded-lg shadow-md w-full max-w-sm sm:max-w-md p-5 sm:p-6 lg:p-8">
+        {/* Page header - responsive text sizes */}
+        <div className="mb-5 sm:mb-6">
+          <h1 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">
             Create an account
           </h1>
-          <p className="text-xs text-gray-600">
+          <p className="text-xs sm:text-sm text-gray-600">
             Sign up to access real-time station feedback and alerts.
           </p>
         </div>
@@ -185,10 +185,10 @@ const Register = () => {
 
         {/* Registration form */}
         <form onSubmit={handleSubmit}>
-          {/* First and Last Name in a row */}
-          <div className="grid grid-cols-2 gap-3 mb-4">
+          {/* First and Last Name - stack on very small screens, row on larger */}
+          <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4 mb-4">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 First Name
               </label>
               <input
@@ -205,7 +205,7 @@ const Register = () => {
               )}
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Last Name
               </label>
               <input
@@ -249,9 +249,6 @@ const Register = () => {
             password={formData.password}
             hasError={!!errors.password}
           />
-
-          {/* for testing purposes */}
-          {/* {console.log("Password error:", errors.password)}   */}
           
           {/* Confirm password input */}
           <PasswordField
@@ -276,7 +273,7 @@ const Register = () => {
           {/* Terms and conditions checkbox */}
           <CheckboxField
             label={
-              <span>
+              <span className="text-xs sm:text-sm">
                 I agree to the{" "}
                 <a href="/terms" className="text-[#BC0B2A] underline">
                   Terms and Conditions
@@ -302,8 +299,8 @@ const Register = () => {
         </form>
 
         {/* Login link for existing users */}
-        <div className="mt-6 text-center">
-          <p className="text-xs text-gray-600">
+        <div className="mt-5 sm:mt-6 text-center">
+          <p className="text-xs sm:text-sm text-gray-600">
             Already have an account?{" "}
             <a
               href="/login"

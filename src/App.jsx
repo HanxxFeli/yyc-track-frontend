@@ -40,7 +40,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppContent /> {/*app content that contains all the routes */}
+        <AppContent /> {/* app content that contains all the routes */}
       </AuthProvider>
     </BrowserRouter>
   );
@@ -49,59 +49,70 @@ const App = () => {
 // App Content will contain the app structure
 const AppContent = () => {
   return (
+    // Outer container: full height, flex column to push footer down
     <div className="min-h-screen flex flex-col bg-[#F5F6F7]">
-      {/* Global header */}
+      
+      {/* Global header - fixed on mobile for better UX */}
       <Header />
 
-      {/* main content area where the page is displayed */}
-      <main className="flex-grow px-10 py-10">
-        <Routes>
-          {/* public pages */}
-          <Route path="/" element={<Home />} />
-          <Route path="/map" element={<Home />} />
-          <Route path="/stations" element={<Home />} />
+      {/* Main content area: flex-grow pushes footer to bottom, NO PADDING for Home/Map page */}
+      <main className="flex-grow">
+        {/* Container to prevent content from getting too wide on large screens */}
+        <div className="h-full">
+          <Routes>
+            {/* public pages */}
+            <Route path="/" element={<Home />} />
+            <Route path="/map" element={<Home />} />
+            <Route path="/stations" element={<Home />} />
 
-          {/* User Login and Registration pages */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
+            {/* User Login and Registration pages */}
+            <Route path="/login" element={<div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10"><Login /></div>} />
+            <Route path="/register" element={<div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10"><Register /></div>} />
+            <Route path="/verify-email" element={<div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10"><VerifyEmail /></div>} />
+            <Route path="/forgot-password" element={<div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10"><ForgotPassword /></div>} />
+            <Route path="/reset-password/:token" element={<div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10"><ResetPassword /></div>} />
 
-          {/* OAuth routes */}
-          <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/complete-profile" element={<CompleteProfile />} />
+            {/* OAuth routes */}
+            <Route path="/auth/callback" element={<div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10"><AuthCallback /></div>} />
+            <Route path="/complete-profile" element={<div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10"><CompleteProfile /></div>} />
 
-          {/* Protected routes - wrap with ProtectedRoute */}
-          <Route
-            path="/account-settings"
-            element={
-              <ProtectedRoute>
-                <AccountSettings />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <AuthLandingPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/feedback"
-            element={
-              <ProtectedRoute>
-                <FeedbackPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/account-deleted" element={<AccountDeleted />} />
+            {/* Protected routes - wrap with ProtectedRoute */}
+            <Route
+              path="/account-settings"
+              element={
+                <ProtectedRoute>
+                  <div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10">
+                    <AccountSettings />
+                  </div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10">
+                    <AuthLandingPage />
+                  </div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/feedback"
+              element={
+                <ProtectedRoute>
+                  <div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10">
+                    <FeedbackPage />
+                  </div>
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/account-deleted" element={<div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10"><AccountDeleted /></div>} />
 
-          {/* 404 catch-all route - must be last */}
-          <Route path="*" element={<ErrorPage />} />
-        </Routes>
+            {/* 404 catch-all route - must be last */}
+            <Route path="*" element={<div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10"><ErrorPage /></div>} />
+          </Routes>
+        </div>
       </main>
 
       {/* Global Footer */}
