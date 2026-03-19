@@ -5,6 +5,7 @@ import {
   Routes,
   Route,
   BrowserRouter,
+  useLocation
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -23,7 +24,12 @@ import CompleteProfile from './pages/CompleteProfile'
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Stations from './pages/Stations';
-
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminHeader from './components/admin/AdminHeader';
+import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
+import { AdminAuthProvider } from './contexts/AdminAuthContext';
+import FeedbackPage from './pages/FeedbackPage'
 /**
  * App Component
  *
@@ -48,6 +54,10 @@ const App = () => {
 
 // App Content will contain the app structure
 const AppContent = () => {
+  const location = useLocation();
+
+  const isAdminRoute = location.pathname.startsWith("/admin");
+  const isAdminLogin = location.pathname === "/admin/login";
   return (
     // Outer container: full height, flex column to push footer down
     <div className="min-h-screen flex flex-col bg-[#F5F6F7]">
@@ -129,8 +139,7 @@ const AppContent = () => {
 
             {/* 404 catch-all route - must be last */}
             <Route path="*" element={<div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10"><ErrorPage /></div>} />
-          </Routes>
-        </div>
+          </Routes>        
       </main>
 
       {/* Global Footer */}
