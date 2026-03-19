@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import ManageAlerts from "../components/ManageAlerts";
+import ManageAlerts from "../components/feedback/ManageAlerts";
 import warningIcon from "../assets/warning-icon.png";
-import PasswordField from "../components/PasswordField";
+import PasswordField from "../components/common/PasswordField";
 
 /**
  * Account Settings Page 

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import 'leaflet/dist/leaflet.css';
+// import 'leaflet/dist/leaflet.css';
 
-import StationFilter from "../components/StationFIlter";
-import CalgaryMap from "../components/CalgaryMap";
+import StationFilter from "../components/map/StationFIlter";
+import CalgaryMap from "../components/map/CalgaryMap";
 
 export default function Home() { 
   const [filters, setFilters] = useState({
@@ -29,7 +29,7 @@ export default function Home() {
         </div>
       
         {/* Map Panel */}
-        <div className="flex-1 h-[500px] lg:h-full bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="flex-1 h-[500px] lg:h-full bg-white rounded-lg shadow-lg overflow-hidden z-10">
           <CalgaryMap filters={filters} />
         </div>
       </div> 

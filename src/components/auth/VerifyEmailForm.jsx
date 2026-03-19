@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
-import CodeInput from "./CodeInput";
-import PrimaryButton from "./PrimaryButton";
-import SecondaryButton from "./SecondaryButton";
-import ErrorMessage from "./ErrorMessage";
-import SuccessMessage from "./SuccessMessage";
-import LinkButton from "./LinkButton";
+import CodeInput from "../common/CodeInput";
+import PrimaryButton from "../buttons/PrimaryButton"
+import SecondaryButton from "../buttons/SecondaryButton"
+import ErrorMessage from "../common/ErrorMessage";
+import SuccessMessage from "../common/SuccessMessage";
+import LinkButton from "../buttons/LinkButton";
 
 /**
  * Complete email verification form with 6-digit code input

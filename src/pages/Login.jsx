@@ -1,7 +1,7 @@
 import { useState } from "react";
-import LoginInputField from "../components/LoginInputField";
-import LoginPasswordField from "../components/LoginPasswordField";
-import LoginSubmitButton from "../components/LoginSubmitButton";
+import LoginInputField from "../components/auth/LoginInputField";
+import LoginPasswordField from "../components/auth/LoginPasswordField";
+import LoginSubmitButton from "../components/auth/LoginSubmitButton";
 import { AiOutlineWarning } from "react-icons/ai";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -128,6 +128,14 @@ export default function Login() {
             Don’t have an account?{" "}
             <a href="/register" className="text-[#BC0B2A] font-medium hover:underline">
               Register here
+            </a>
+          </p>
+
+          {/*Admin*/}
+          <p className="text-center mt-2 text-sm text-gray-600">
+            Admin?{" "}
+            <a href="/admin/login" className="text-[#BC0B2A] font-medium hover:underline">
+              Log in here
             </a>
           </p>
         </form>

@@ -1,10 +1,15 @@
 // page imports (these are placeholder components for now)
 // NOTE FOR ENO: Make sure your page component names match exactly
-import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  BrowserRouter,
+} from "react-router-dom";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -21,11 +26,11 @@ import Stations from './pages/Stations';
 
 /**
  * App Component
- * 
+ *
  * Root component that:
  * - Initializes the React Router system
  * - Renders the global header on all page
- * - Defines all client-side routes 
+ * - Defines all client-side routes
  * - Handles temporary login detection (localStorage) before backend integration
  * - `isLoggedIn` will be replaced with real authentication
  */
@@ -34,20 +39,19 @@ import Stations from './pages/Stations';
 const App = () => {
   return (
     <BrowserRouter>
-      <AuthProvider> 
+      <AuthProvider>
         <AppContent /> {/*app content that contains all the routes */}
       </AuthProvider>
     </BrowserRouter>
   );
 };
 
-// App Content will contain the app structure 
+// App Content will contain the app structure
 const AppContent = () => {
-
   return (
     <div className="min-h-screen flex flex-col bg-[#F5F6F7]">
-      {/* Global header */}
-      <Header />
+      {/* Show AdminHeader ONLY for /admin routes */}
+      {isAdminRoute && !isAdminLogin ? <AdminHeader /> : <Header />}
 
       {/* main content area where the page is displayed */}
       <main className="flex-grow px-10 py-10">
@@ -56,6 +60,27 @@ const AppContent = () => {
           <Route path="/" element={<Home />} />
           <Route path="/map" element={<Home />} />
           <Route path="/stations" element={<Stations />} />
+          
+          {/* Admin Routes */}
+          <Route
+            path='/admin/*'
+            element={
+              <AdminAuthProvider>
+                <Routes>
+                  <Route path="login" element={<AdminLogin />} />
+                  {/* All admin routes should be protected */}
+                  <Route 
+                    path='dashboard'
+                    element={
+                      <AdminProtectedRoute>
+                        <AdminDashboard />
+                      </AdminProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </AdminAuthProvider>
+            }
+          /> 
 
           {/* User Login and Registration pages */}
           <Route path="/login" element={<Login />} />
@@ -65,29 +90,36 @@ const AppContent = () => {
           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
           {/* OAuth routes */}
-          <Route path='/auth/callback' element={<AuthCallback />} />
-          <Route path='/complete-profile' element={<CompleteProfile />} />
-          
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/complete-profile" element={<CompleteProfile />} />
+
           {/* Protected routes - wrap with ProtectedRoute */}
-          <Route 
-            path="/account-settings" 
+          <Route
+            path="/account-settings"
             element={
               <ProtectedRoute>
                 <AccountSettings />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path='/dashboard' 
+          <Route
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <AuthLandingPage />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route path="/feedback" element={<Home />} />
-          <Route path="/account-deleted" element={<AccountDeleted />} /> 
-            
+          <Route
+            path="/feedback"
+            element={
+              <ProtectedRoute>
+                <FeedbackPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/account-deleted" element={<AccountDeleted />} />
+
           {/* 404 catch-all route - must be last */}
           <Route path="*" element={<ErrorPage />} />
         </Routes>
