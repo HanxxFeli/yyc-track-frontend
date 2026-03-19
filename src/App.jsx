@@ -31,6 +31,7 @@ import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
 import { AdminAuthProvider } from './contexts/AdminAuthContext';
 import FeedbackPage from './pages/FeedbackPage'
 import { CTrainProvider } from "./contexts/CtrainContext";
+import StationMonitoring from "./pages/StationMonitoring";
 /**
  * App Component
  *
@@ -68,7 +69,7 @@ const AppContent = () => {
       {isAdminRoute && !isAdminLogin ? <AdminHeader /> : <Header />}
 
       {/* main content area where the page is displayed */}
-      <main className="flex-grow">
+      <main className="flex-gro px-4 sm:px-6 lg:px-10 py-6">
         <Routes>
           {/* public pages */}
           <Route path="/" element={<Home />} />
@@ -88,6 +89,14 @@ const AppContent = () => {
                     element={
                       <AdminProtectedRoute>
                         <AdminDashboard />
+                      </AdminProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path='stations'
+                    element={
+                      <AdminProtectedRoute>
+                        <StationMonitoring />
                       </AdminProtectedRoute>
                     }
                   />
