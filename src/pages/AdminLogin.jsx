@@ -14,9 +14,9 @@ import { useNavigate, Link } from "react-router-dom";
 import { AiOutlineWarning } from "react-icons/ai";
 
 import { useAdminAuth } from "../contexts/AdminAuthContext";
-import LoginInputField from "../components/LoginInputField";
-import LoginPasswordField from "../components/LoginPasswordField";
-import LoginSubmitButton from "../components/LoginSubmitButton";
+import LoginInputField from "../components/auth/LoginInputField";
+import LoginPasswordField from "../components/auth/LoginPasswordField";
+import LoginSubmitButton from "../components/auth/LoginSubmitButton";
 
 export default function AdminLogin() {
 
