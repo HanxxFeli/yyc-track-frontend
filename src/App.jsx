@@ -1,35 +1,36 @@
 // page imports (these are placeholder components for now)
 // NOTE FOR ENO: Make sure your page component names match exactly
-import { BrowserRouter as Router, Routes, Route, BrowserRouter, useLocation } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  BrowserRouter,
+} from "react-router-dom";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import AccountSettings from "./pages/AccountSettings";
 import ErrorPage from "./pages/ErrorPage";
-import AccountDeleted from './pages/AccountDeleted';
-import AuthLandingPage from './pages/AuthLandingPage';
-import AuthCallback from './pages/AuthCallback';
-import CompleteProfile from './pages/CompleteProfile'
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminHeader from './components/admin/AdminHeader';
-import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
-import { AdminAuthProvider } from './contexts/AdminAuthContext';
+import AccountDeleted from "./pages/AccountDeleted";
+import AuthLandingPage from "./pages/AuthLandingPage";
+import AuthCallback from "./pages/AuthCallback";
+import CompleteProfile from "./pages/CompleteProfile";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import FeedbackPage from "./pages/FeedbackPage";
 
 /**
  * App Component
- * 
+ *
  * Root component that:
  * - Initializes the React Router system
  * - Renders the global header on all page
- * - Defines all client-side routes 
+ * - Defines all client-side routes
  * - Handles temporary login detection (localStorage) before backend integration
  * - `isLoggedIn` will be replaced with real authentication
  */
@@ -38,20 +39,15 @@ import { AdminAuthProvider } from './contexts/AdminAuthContext';
 const App = () => {
   return (
     <BrowserRouter>
-      <AuthProvider> 
+      <AuthProvider>
         <AppContent /> {/*app content that contains all the routes */}
       </AuthProvider>
     </BrowserRouter>
   );
 };
 
-// App Content will contain the app structure 
+// App Content will contain the app structure
 const AppContent = () => {
-  const location = useLocation();
-
-  const isAdminRoute = location.pathname.startsWith("/admin");
-  const isAdminLogin = location.pathname === "/admin/login";
-
   return (
     <div className="min-h-screen flex flex-col bg-[#F5F6F7]">
       {/* Show AdminHeader ONLY for /admin routes */}
@@ -94,29 +90,36 @@ const AppContent = () => {
           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
           {/* OAuth routes */}
-          <Route path='/auth/callback' element={<AuthCallback />} />
-          <Route path='/complete-profile' element={<CompleteProfile />} />
-          
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/complete-profile" element={<CompleteProfile />} />
+
           {/* Protected routes - wrap with ProtectedRoute */}
-          <Route 
-            path="/account-settings" 
+          <Route
+            path="/account-settings"
             element={
               <ProtectedRoute>
                 <AccountSettings />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path='/dashboard' 
+          <Route
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <AuthLandingPage />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route path="/feedback" element={<Home />} />
-          <Route path="/account-deleted" element={<AccountDeleted />} /> 
-            
+          <Route
+            path="/feedback"
+            element={
+              <ProtectedRoute>
+                <FeedbackPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/account-deleted" element={<AccountDeleted />} />
+
           {/* 404 catch-all route - must be last */}
           <Route path="*" element={<ErrorPage />} />
         </Routes>

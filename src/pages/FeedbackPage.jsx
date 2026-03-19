@@ -6,7 +6,7 @@ import SecondaryButton from "../components/buttons/SecondaryButton";
 import ErrorMessage from "../components/common/ErrorMessage";
 import SuccessMessage from "../components/common/SuccessMessage";
 
-// Feedback-specific components (add these to src/components/feedback/)
+// Feedback-specific components
 import ScoreInput from "../components/feedback/ScoreInput";
 import HistoryRow from "../components/feedback/HistoryRow";
 
