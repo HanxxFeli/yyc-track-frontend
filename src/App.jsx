@@ -69,7 +69,7 @@ const AppContent = () => {
       {isAdminRoute && !isAdminLogin ? <AdminHeader /> : <Header />}
 
       {/* main content area where the page is displayed */}
-      <main className="flex-gro px-4 sm:px-6 lg:px-10 py-6">
+      <main className="flex-grow px-4 sm:px-6 lg:px py-6">
         <Routes>
           {/* public pages */}
           <Route path="/" element={<Home />} />
@@ -97,6 +97,13 @@ const AppContent = () => {
                     element={
                       <AdminProtectedRoute>
                         <StationMonitoring />
+                      </AdminProtectedRoute>
+                    }
+                   <Route
+                    path='feedback'
+                    element={
+                      <AdminProtectedRoute>
+                        <FeedbackManagement />
                       </AdminProtectedRoute>
                     }
                   />
