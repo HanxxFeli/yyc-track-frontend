@@ -50,8 +50,8 @@ const App = () => {
 const AppContent = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#F5F6F7]">
-      {/* Global header */}
-      <Header />
+      {/* Show AdminHeader ONLY for /admin routes */}
+      {isAdminRoute && !isAdminLogin ? <AdminHeader /> : <Header />}
 
       {/* main content area where the page is displayed */}
       <main className="flex-grow px-10 py-10">
@@ -60,6 +60,27 @@ const AppContent = () => {
           <Route path="/" element={<Home />} />
           <Route path="/map" element={<Home />} />
           <Route path="/stations" element={<Home />} />
+          
+          {/* Admin Routes */}
+          <Route
+            path='/admin/*'
+            element={
+              <AdminAuthProvider>
+                <Routes>
+                  <Route path="login" element={<AdminLogin />} />
+                  {/* All admin routes should be protected */}
+                  <Route 
+                    path='dashboard'
+                    element={
+                      <AdminProtectedRoute>
+                        <AdminDashboard />
+                      </AdminProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </AdminAuthProvider>
+            }
+          /> 
 
           {/* User Login and Registration pages */}
           <Route path="/login" element={<Login />} />
