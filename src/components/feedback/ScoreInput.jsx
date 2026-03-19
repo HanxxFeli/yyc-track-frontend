@@ -16,7 +16,7 @@ const ScoreInput = ({ label, value, onChange, invalid }) => (
     <input
       type="number"
       min={0}
-      max={100}
+      max={5}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       className={`w-16 text-center border rounded px-2 py-1 text-sm font-medium outline-none
