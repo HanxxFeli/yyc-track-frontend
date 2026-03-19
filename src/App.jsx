@@ -31,6 +31,8 @@ import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
 import { AdminAuthProvider } from './contexts/AdminAuthContext';
 import FeedbackPage from './pages/FeedbackPage'
 import { CTrainProvider } from "./contexts/CtrainContext";
+import { StationProvider } from "./contexts/StationContext";
+
 /**
  * App Component
  *
@@ -47,9 +49,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <CTrainProvider>
-          <AppContent /> {/* app content that contains all the routes */}
-        </CTrainProvider>
+        <StationProvider>
+          <CTrainProvider>
+            <AppContent /> {/* app content that contains all the routes */}
+          </CTrainProvider>
+        </StationProvider>
       </AuthProvider>
     </BrowserRouter>
   );
