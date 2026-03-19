@@ -29,7 +29,7 @@ export default function Home() {
         </div>
       
         {/* Map Panel */}
-        <div className="flex-1 h-[500px] lg:h-full bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="flex-1 h-[500px] lg:h-full bg-white rounded-lg shadow-lg overflow-hidden z-10">
           <CalgaryMap filters={filters} />
         </div>
       </div> 

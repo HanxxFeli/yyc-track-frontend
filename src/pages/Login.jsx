@@ -130,6 +130,14 @@ export default function Login() {
               Register here
             </a>
           </p>
+
+          {/*Admin*/}
+          <p className="text-center mt-2 text-sm text-gray-600">
+            Admin?{" "}
+            <a href="/admin/login" className="text-[#BC0B2A] font-medium hover:underline">
+              Log in here
+            </a>
+          </p>
         </form>
       </div>
     </div>
