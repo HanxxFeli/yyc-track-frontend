@@ -16,13 +16,13 @@ import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import AccountSettings from "./pages/AccountSettings";
 import ErrorPage from "./pages/ErrorPage";
-import AccountDeleted from "./pages/AccountDeleted";
-import AuthLandingPage from "./pages/AuthLandingPage";
-import AuthCallback from "./pages/AuthCallback";
-import CompleteProfile from "./pages/CompleteProfile";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import FeedbackPage from "./pages/FeedbackPage";
+import AccountDeleted from './pages/AccountDeleted';
+import AuthLandingPage from './pages/AuthLandingPage';
+import AuthCallback from './pages/AuthCallback';
+import CompleteProfile from './pages/CompleteProfile'
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import Stations from './pages/Stations';
 
 /**
  * App Component
@@ -59,7 +59,7 @@ const AppContent = () => {
           {/* public pages */}
           <Route path="/" element={<Home />} />
           <Route path="/map" element={<Home />} />
-          <Route path="/stations" element={<Home />} />
+          <Route path="/stations" element={<Stations />} />
           
           {/* Admin Routes */}
           <Route

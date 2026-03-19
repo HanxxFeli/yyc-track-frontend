@@ -1,34 +1,55 @@
 /**
- * StatusBadge
+ * StatusBadge Component
  * 
- * - Reusable pill badge for statuses across admin pages
+ * displays a visual indicator (colored dot + label)
+ * represents a station's condition
  * 
- * Props:
- * - label: string
- * - variant: "success" | "warning" | "danger" |
- * - size: "sm" | "md"
+ * props: 
+ * - value: string 
  */
+export default function StatusBadge({ value }) {
 
-export default function StatusBadge({ label, variant = "neutral", size = "sm" }) {
-  const base = 
-    "inline-flex items-center justify-center rounded-full border font-medium whitespace-nowrap";
+  /**
+   * Normalize value to lowercase string
+   * this prevents issues if:
+   * - value is undefined
+   * - value has inconsistent casing 
+   */
+  const v = String(value || "").toLowerCase();
 
-  const sizes = {
-    sm: "px-3 py-1 text-xs",
-    md: "px-4 py-1.5 text-sm",
-  };
+  /**
+   * determines dot color based on condition
+   * tailwind classes are selected dynamically
+   */
+  const dot =
+    v === "good"
+      ? "bg-green-500"
+      : v === "moderate"
+      ? "bg-yellow-500"
+      : v === "poor"
+      ? "bg-red-500"
+      : "bg-gray-400";
 
-  const variants = {
-    danger: "bg-red-50 text-red-700 border-red-200",
-    warning: "bg-yellow-50 text-yellow-800 border-yellow-200",
-    success: "bg-green-50 text-green-700 border-green-200",
-    info: "bg-blue-50 text-blue-700 border-blue-200",
-    neutral: "bg-gray-50 text-gray-700 border-gray-200",
-  };
+  /**
+   * determines display label based on condition
+   * fallback: shows raw value if it is not recognized
+   */
+  const label =
+    v === "good"
+      ? "Good Condition"
+      : v === "moderate"
+      ? "Moderate Condition"
+      : v === "poor"
+      ? "Poor Condition"
+      : value;
 
   return (
-    <span className={`${base} ${sizes[size]} ${variants[variant]}`}>
-      {label}
-    </span>
+    <div className="flex items-center gap-3">
+      {/* Colored Status Dot */}
+      <span className={`h-4 w-4 rounded-full ${dot}`} />
+
+      {/* Status Text Label */}
+      <span className="text-sm font-semibold text-gray-900">{label}</span>
+    </div>
   );
 }
