@@ -102,7 +102,8 @@ const AppContent = () => {
                         <StationMonitoring />
                       </AdminProtectedRoute>
                     }
-                   <Route
+                  /> 
+                  <Route
                     path='feedback'
                     element={
                       <AdminProtectedRoute>
