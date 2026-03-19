@@ -16,13 +16,13 @@ import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import AccountSettings from "./pages/AccountSettings";
 import ErrorPage from "./pages/ErrorPage";
-import AccountDeleted from "./pages/AccountDeleted";
-import AuthLandingPage from "./pages/AuthLandingPage";
-import AuthCallback from "./pages/AuthCallback";
-import CompleteProfile from "./pages/CompleteProfile";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import FeedbackPage from "./pages/FeedbackPage";
+import AccountDeleted from './pages/AccountDeleted';
+import AuthLandingPage from './pages/AuthLandingPage';
+import AuthCallback from './pages/AuthCallback';
+import CompleteProfile from './pages/CompleteProfile'
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import Stations from './pages/Stations';
 
 /**
  * App Component
@@ -51,19 +51,37 @@ const AppContent = () => {
   return (
     // Outer container: full height, flex column to push footer down
     <div className="min-h-screen flex flex-col bg-[#F5F6F7]">
-      
-      {/* Global header - fixed on mobile for better UX */}
-      <Header />
+      {/* Show AdminHeader ONLY for /admin routes */}
+      {isAdminRoute && !isAdminLogin ? <AdminHeader /> : <Header />}
 
-      {/* Main content area: flex-grow pushes footer to bottom, NO PADDING for Home/Map page */}
+      {/* main content area where the page is displayed */}
       <main className="flex-grow">
-        {/* Container to prevent content from getting too wide on large screens */}
-        <div className="h-full">
-          <Routes>
-            {/* public pages */}
-            <Route path="/" element={<Home />} />
-            <Route path="/map" element={<Home />} />
-            <Route path="/stations" element={<Home />} />
+        <Routes>
+          {/* public pages */}
+          <Route path="/" element={<Home />} />
+          <Route path="/map" element={<Home />} />
+          <Route path="/stations" element={<Stations />} />
+          
+          {/* Admin Routes */}
+          <Route
+            path='/admin/*'
+            element={
+              <AdminAuthProvider>
+                <Routes>
+                  <Route path="login" element={<AdminLogin />} />
+                  {/* All admin routes should be protected */}
+                  <Route 
+                    path='dashboard'
+                    element={
+                      <AdminProtectedRoute>
+                        <AdminDashboard />
+                      </AdminProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </AdminAuthProvider>
+            }
+          /> 
 
             {/* User Login and Registration pages */}
             <Route path="/login" element={<div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10"><Login /></div>} />

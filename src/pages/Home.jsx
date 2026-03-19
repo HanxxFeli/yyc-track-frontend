@@ -32,8 +32,8 @@ export default function Home() {
           />
         </div>
       
-        {/* Map Panel - fills remaining space */}
-        <div className="flex-1 h-[500px] sm:h-[600px] lg:h-full min-h-0">
+        {/* Map Panel */}
+        <div className="flex-1 h-[500px] lg:h-full bg-white rounded-lg shadow-lg overflow-hidden z-10">
           <CalgaryMap filters={filters} />
         </div>
 
