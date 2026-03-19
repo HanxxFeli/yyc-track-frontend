@@ -5,36 +5,37 @@
 // Props: { filters } - filter criteria for stations/lines
 // ============================================================================
 
-
-import { useRef, useEffect } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
+import { useEffect } from 'react';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// component to set the map view 
-const SetViewOnMount = ({ center, zoom}) => { 
-    const map = useMap() // use the map from leaflet
+// Component to set the map view 
+const SetViewOnMount = ({ center, zoom }) => { 
+    const map = useMap(); // Get the map instance from Leaflet
 
     useEffect(() => {
-        map.setView(center, zoom)
-    }, [map, center, zoom])
+        map.setView(center, zoom);
+    }, [map, center, zoom]);
 
     return null;
 }
 
 // Calgary Map component 
 const CalgaryMap = ({ filters }) => { 
-    // calgary coordinates (downtown center)
+    // Calgary coordinates (downtown center)
     const calgaryCenter = [51.0447, -114.0719];
-    const defaultZoom = 14;
+    const defaultZoom = 12;
 
     return ( 
-        <div className="w-full h-full rounded-lg overflow-hidden shadow-lg">
+        // Container with explicit height for Leaflet
+        <div className="w-full h-full bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
             <MapContainer
                 center={calgaryCenter}
                 zoom={defaultZoom}
                 scrollWheelZoom={true}
-                className='w-full h-full [&_.leaflet-tile-pane]:brightness-110 [&_.leaflet-tile-pane]:saturate-[0.6] [&_.leaflet-tile-pane]:contrast-95'
-                zoomControl={true}    
+                className="w-full h-full"
+                zoomControl={true}
+                style={{ height: '100%', width: '100%' }}
             >
                 {/* OpenStreetMap Tiles */}
                 <TileLayer
@@ -42,11 +43,11 @@ const CalgaryMap = ({ filters }) => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
-                {/* Set initial view on load*/}
+                {/* Set initial view on load */}
                 <SetViewOnMount center={calgaryCenter} zoom={defaultZoom} />
             </MapContainer>
         </div>
-    )
+    );
 }
 
 export default CalgaryMap;

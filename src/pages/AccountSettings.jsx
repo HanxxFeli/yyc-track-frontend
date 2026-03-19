@@ -179,21 +179,21 @@ const AccountSettings = () => {
     }
   };
 
-  // page layout
+  // page layout with responsive design
   return (
-    <div className="px-10 py-8 bg-[#F5F6F7] min-h-screen">
+    <div className="px-4 sm:px-6 lg:px-10 py-6 sm:py-8 bg-[#F5F6F7] min-h-screen">
 
-      {/* page header */}
-      <h1 className="text-3xl font-semibold mb-2">Account Settings</h1>
-      <p className="text-gray-600 mb-8">
+      {/* page header - responsive text sizes */}
+      <h1 className="text-2xl sm:text-3xl font-semibold mb-2">Account Settings</h1>
+      <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8">
         Update your account information and manage your transit alerts.
       </p>
 
-      {/* two-panel grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* two-panel grid - stacks on mobile, side-by-side on desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
 
         {/* left panel – account info */}
-        <div className="bg-white p-8 rounded-xl shadow-lg">
+        <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
 
           {/* first name */}
           <label className="block text-sm font-medium mb-1">First Name</label>
@@ -201,7 +201,7 @@ const AccountSettings = () => {
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2 mb-5 text-sm"
+            className="w-full border rounded-lg px-3 py-2 mb-5 text-sm focus:outline-none focus:ring-2 focus:ring-[#BC0B2A]"
           />
 
           {/* last name */}
@@ -210,7 +210,7 @@ const AccountSettings = () => {
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2 mb-5 text-sm"
+            className="w-full border rounded-lg px-3 py-2 mb-5 text-sm focus:outline-none focus:ring-2 focus:ring-[#BC0B2A]"
           />
 
           {/* email */}
@@ -283,8 +283,8 @@ const AccountSettings = () => {
                 <p className="text-red-600 text-sm mt-2">{globalPasswordError}</p>
               )}
 
-              {/* save/cancel buttons */}
-              <div className="flex justify-end gap-3 mt-4">
+              {/* save/cancel buttons - stack on mobile */}
+              <div className="flex flex-col sm:flex-row justify-end gap-3 mt-4">
                 <button
                   onClick={() => {
                     setShowPasswordFields(false);
@@ -292,14 +292,14 @@ const AccountSettings = () => {
                     setConfirmPassword("");
                     setCurrentPassword("");
                   }}
-                  className="px-4 py-2 border rounded"
+                  className="w-full sm:w-auto px-4 py-2 border rounded hover:bg-gray-50 transition"
                 >
                   Cancel
                 </button>
 
                 <button
                   onClick={handlePasswordSave}
-                  className="px-4 py-2 bg-[#BC0B2A] text-white rounded"
+                  className="w-full sm:w-auto px-4 py-2 bg-[#BC0B2A] text-white rounded hover:bg-[#A30A26] transition"
                 >
                   Save Password
                 </button>
@@ -313,7 +313,7 @@ const AccountSettings = () => {
             type="text"
             value={postalCode}
             onChange={(e) => setPostalCode(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2 mb-8 text-sm"
+            className="w-full border rounded-lg px-3 py-2 mb-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#BC0B2A]"
           />
 
           {/* notification toggle */}
@@ -342,13 +342,13 @@ const AccountSettings = () => {
             Delete Account
           </button>
 
-          {/* save changes buttons */}
-          <div className="flex justify-end gap-4">
+          {/* save changes button */}
+          <div className="flex justify-end">
             <button
               onClick={handleSave}
-              className="px-5 py-2 bg-[#BC0B2A] text-white rounded-md text-sm hover:bg-[#A30A26]"
+              className="w-full sm:w-auto px-5 py-2 bg-[#BC0B2A] text-white rounded-md text-sm hover:bg-[#A30A26] transition"
             >
-              Save
+              Save Changes
             </button>
           </div>
         </div>
@@ -357,23 +357,23 @@ const AccountSettings = () => {
         <ManageAlerts />
       </div>
 
-      {/* delete account modal */}
+      {/* delete account modal - responsive padding and sizing */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-[100]">
-          <div className="bg-white p-10 rounded-xl shadow-2xl max-w-lg w-full text-center">
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-[100] p-4">
+          <div className="bg-white p-6 sm:p-10 rounded-xl shadow-2xl max-w-lg w-full text-center">
 
             {/* warning icon */}
             <img 
               src={warningIcon}
               alt="Warning"
-              className="w-20 h-20 mb-4 mx-auto object-contain"
+              className="w-16 h-16 sm:w-20 sm:h-20 mb-4 mx-auto object-contain"
             />
 
-            <h2 className="text-xl font-semibold mb-2">
+            <h2 className="text-lg sm:text-xl font-semibold mb-2">
               Are you sure you want to delete your account?
             </h2>
 
-            <p className="text-gray-600 mb-6">
+            <p className="text-sm sm:text-base text-gray-600 mb-6">
               This action cannot be undone.<br />
               All your feedback and data will be permanently removed.
             </p>
@@ -395,22 +395,22 @@ const AccountSettings = () => {
               <p className="text-red-600 text-sm mb-3">{deletePasswordError}</p>
             )}
 
-            {/* modal buttons */}
-            <div className="flex justify-center gap-4 mt-4">
+            {/* modal buttons - stack on mobile */}
+            <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-4">
               <button
                 onClick={() => {
                   setShowDeleteModal(false);
                   setDeletePassword("");
                   setDeletePasswordError("");
                 }}
-                className="px-4 py-2 border rounded-md text-[#BC0B2A] border-[#BC0B2A] hover:bg-red-50"
+                className="w-full sm:w-auto px-4 py-2 border rounded-md text-[#BC0B2A] border-[#BC0B2A] hover:bg-red-50 transition"
               >
                 Cancel
               </button>
 
               <button
                 onClick={handleDeleteAccount}
-                className="px-5 py-2 bg-[#BC0B2A] text-white rounded-md hover:bg-[#A30A26]"
+                className="w-full sm:w-auto px-5 py-2 bg-[#BC0B2A] text-white rounded-md hover:bg-[#A30A26] transition"
               >
                 Delete Account
               </button>

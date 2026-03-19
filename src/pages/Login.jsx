@@ -34,7 +34,7 @@ export default function Login() {
     setIsLoading(false);
   };
 
-    // Handle Google sign-in 
+  // Handle Google sign-in 
   const handleGoogleSignIn = (e) => {
     e.preventDefault();
     console.log('Google sign-in clicked');
@@ -43,14 +43,14 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 py-10">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 py-6 sm:py-10 px-4">
+      <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-md border">
         
-        {/* Title */}
-        <h1 className="text-2xl font-bold mb-2 text-center">
+        {/* Title - responsive text size */}
+        <h1 className="text-xl sm:text-2xl font-bold mb-2 text-center">
           Login to your account
         </h1>
-        <p className="text-gray-600 text-center mb-6">
+        <p className="text-sm sm:text-base text-gray-600 text-center mb-6">
           Access real-time station feedback and alerts.
         </p>
 
@@ -77,16 +77,16 @@ export default function Login() {
             error={error ? " " : null}
           />
 
-          {/* Error Box */}
+          {/* Error Box - responsive text */}
           {error && (
-            <div className="flex items-center gap-2 bg-red-100 text-red-700 border border-red-300 p-2 rounded mb-4">
-              <AiOutlineWarning size={22} />
-              <p>{error}</p>
+            <div className="flex items-start gap-2 bg-red-100 text-red-700 border border-red-300 p-3 rounded mb-4">
+              <AiOutlineWarning size={20} className="flex-shrink-0 mt-0.5" />
+              <p className="text-sm sm:text-base">{error}</p>
             </div>
           )}
 
-          {/* Remember / Forgot */}
-          <div className="flex justify-between items-center mb-4">
+          {/* Remember / Forgot - stack on very small screens */}
+          <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 xs:gap-0 mb-4">
             <label className="flex items-center gap-2">
               <input type="checkbox" className="h-4 w-4" />
               <span className="text-gray-700 text-sm">Remember me</span>
@@ -105,11 +105,10 @@ export default function Login() {
           {/* Divider */}
           <div className="my-4 text-center text-sm text-gray-500">or</div>
 
-          {/* Google Login */}
+          {/* Google Login - responsive padding and text */}
           <button
-          
             type="button"
-            className="w-full flex items-center justify-center gap-3 border py-3 rounded-lg hover:bg-gray-50 transition"
+            className="w-full flex items-center justify-center gap-2 sm:gap-3 border py-2.5 sm:py-3 rounded-lg hover:bg-gray-50 transition text-sm sm:text-base"
             onClick={(e) => {
               e.preventDefault(); // prevent google button from submitting
               handleGoogleSignIn(e)
@@ -123,9 +122,9 @@ export default function Login() {
             <span>Sign in with Google</span>
           </button>
 
-          {/* Register */}
+          {/* Register - responsive text */}
           <p className="text-center mt-4 text-sm">
-            Don’t have an account?{" "}
+            Don't have an account?{" "}
             <a href="/register" className="text-[#BC0B2A] font-medium hover:underline">
               Register here
             </a>
