@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 import 'leaflet/dist/leaflet.css';
-
 import StationFilter from "../components/map/StationFilter";
 import CalgaryMap from "../components/map/CalgaryMap";
 
@@ -11,6 +11,8 @@ export default function Home() {
     category: '',
     transitLine: 'all'
   });
+
+  const {user} =useAuth()
 
   // Update filters when user interacts with StationFilter component
   const handleFilterChange = (newFilters) => { 
@@ -28,7 +30,7 @@ export default function Home() {
         <div className="w-full lg:w-80 xl:w-96 flex-shrink-0 h-auto lg:h-full lg:max-h-full overflow-hidden">
           <StationFilter
             onFilterChange={handleFilterChange}
-            isAuthenticated={false}
+            isAuthenticated={user? true : false}
           />
         </div>
       

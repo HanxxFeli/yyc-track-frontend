@@ -29,6 +29,11 @@ import AdminHeader from './components/admin/AdminHeader';
 import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
 import { AdminAuthProvider } from './contexts/AdminAuthContext';
 import FeedbackPage from './pages/FeedbackPage'
+import { CTrainProvider } from "./contexts/CtrainContext";
+import { StationProvider } from "./contexts/StationContext";
+import StationMonitoring from "./pages/StationMonitoring";
+import FeedbackManagement from "./pages/FeedbackManagement";
+
 import LandingPage from './pages/LandingPage';
 /**
  * App Component
@@ -46,7 +51,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppContent /> {/* app content that contains all the routes */}
+        <StationProvider>
+          <CTrainProvider>
+            <AppContent /> {/* app content that contains all the routes */}
+          </CTrainProvider>
+        </StationProvider>
       </AuthProvider>
     </BrowserRouter>
   );
@@ -66,12 +75,49 @@ const AppContent = () => {
       <Header />
 
       {/* main content area where the page is displayed */}
-      <main className="flex-grow">
+      <main className="flex-grow px-4 sm:px-6 lg:px py-6">
         <Routes>
           {/* public pages */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/map" element={<Home />} />
           <Route path="/stations" element={<Stations />} />
+          
+          {/* Admin Routes */}
+          <Route
+            path='/admin/*'
+            element={
+              <AdminAuthProvider>
+                <Routes>
+                  <Route path="login" element={<AdminLogin />} />
+                  {/* All admin routes should be protected */}
+                  <Route 
+                    path='dashboard'
+                    element={
+                      <AdminProtectedRoute>
+                        <AdminDashboard />
+                      </AdminProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path='stations'
+                    element={
+                      <AdminProtectedRoute>
+                        <StationMonitoring />
+                      </AdminProtectedRoute>
+                    }
+                  /> 
+                  <Route
+                    path='feedback'
+                    element={
+                      <AdminProtectedRoute>
+                        <FeedbackManagement />
+                      </AdminProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </AdminAuthProvider>
+            }
+          /> 
 
           {/* User Login and Registration pages */}
           <Route path="/login" element={<div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-10"><Login /></div>} />
