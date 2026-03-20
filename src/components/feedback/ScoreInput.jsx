@@ -15,7 +15,7 @@ const ScoreInput = ({ label, value, onChange, invalid }) => (
     </span>
     <input
       type="number"
-      min={0}
+      min={1}
       max={5}
       value={value}
       onChange={(e) => onChange(e.target.value)}

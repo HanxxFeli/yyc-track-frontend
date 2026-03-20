@@ -32,6 +32,8 @@ import { AdminAuthProvider } from './contexts/AdminAuthContext';
 import FeedbackPage from './pages/FeedbackPage'
 import { CTrainProvider } from "./contexts/CtrainContext";
 import { StationProvider } from "./contexts/StationContext";
+import StationMonitoring from "./pages/StationMonitoring";
+import FeedbackManagement from "./pages/FeedbackManagement";
 
 /**
  * App Component
@@ -102,7 +104,8 @@ const AppContent = () => {
                         <StationMonitoring />
                       </AdminProtectedRoute>
                     }
-                   <Route
+                  /> 
+                  <Route
                     path='feedback'
                     element={
                       <AdminProtectedRoute>

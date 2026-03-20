@@ -1,76 +1,39 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import FilterBar from '../components/FilterBar';
 import FeedbackToReviewTable from '../components/admin/FeedbackToReviewTable';
 import FeedbackArchive from '../components/admin/FeedbackArchive';
-import { MOCK_FEEDBACK, MOCK_STATION_OPTIONS } from '../mockFeedbackData';
+import { useStations } from '../contexts/StationContext';
 
 /**
- * Configuration for the filter bar controls used on the feedback
- * 
- * Includes:
- * - Search input for keyword filtering
- * - Station dropdown for filtering by station
- * - Status dropdown for filtering by moderation status
- * - Sort dropdown for sorting by date or station name
+ * Maps a raw API pending feedback item to the shape
+ * FeedbackToReviewTable and FeedbackArchive expect.
  */
-const feedbackFilters = [
-  { 
-    type: "search", 
-    key: "query", 
-    placeholder: "Search by station name, user, or keyword..." },
-  {
-    type: "select",
-    key: "station",
-    label: "All Stations",
-    options: MOCK_STATION_OPTIONS.map((station) => ({
-      value: station,
-      label: station,
-    })),
+const mapFeedback = (item) => ({
+  id: item._id,
+  user: item.userId?.email ?? "Unknown User",
+  station: item.stationId?.name ?? "Unknown Station",
+  line: item.stationId?.line ?? "",
+  feedback: item.comment ?? "",
+  categoryRatings: {
+    cleanliness:   item.ratings?.cleanliness   ?? "N/A",
+    safety:        item.ratings?.safety         ?? "N/A",
+    accessibility: item.ratings?.accessibility  ?? "N/A",
+    crowding:      item.ratings?.crowding       ?? "N/A",
   },
-  {
-    type: "select",
-    key: "status",
-    label: "Status",
-    options: [{ value: "needs_review", label: "Needs Review"}],
-  },
-  {
-    type: "select",
-    key: "sort",
-    label: "Sort By",
-    options: [
-      { value: "newest", label: "Newest First" },
-      { value: "oldest", label: "Oldest First" },
-      { value: "station_asc", label: "Station Name (A-Z)" },
-    ],
-  },
-];
+  submitted: new Date(item.createdAt).toLocaleDateString(),
+});
 
-/**
- * FeedbackManagement Page
- * 
- * - Main page for the feedback management system
- * - Manages:
- *  - feedback state (needs review, approved, rejected)
- *  - filter state for searching and sorting feedback
- *  - filtering and sorting logic
- *  - moderation actions (approval and rejection actions)
- * 
- * Child components used:
- * - FilterBar: for rendering the search and filter controls
- * - FeedbackToReviewTable: for displaying feedback items that need review with action buttons
- * - FeedbackArchive: for displaying approved and rejected feedback in separate sections
- */
+const API_URI='http://localhost:5000'
+
 export default function FeedbackManagement() {
-  // state for feedback waiting for review
-  const [toReview, setToReview] = useState(MOCK_FEEDBACK);
+  const { stations } = useStations();
 
-  // state for approved feedback items
+  const [toReview, setToReview] = useState([]);
   const [approved, setApproved] = useState([]);
-
-  // state for rejected feedback items
   const [rejected, setRejected] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // state for active filter values
   const [filters, setFilters] = useState({
     query: "",
     station: "all",
@@ -78,20 +41,78 @@ export default function FeedbackManagement() {
     sort: "newest",
   });
 
-  /**
-   * Memoized filtered/sort feedback list
-   * 
-   * useMemo is used here to avoid recalculating the filtered list on every render, and only recalculate when the `toReview` list or `filters` change.
-   */
+  // Build station options from context instead of mock data
+  const feedbackFilters = [
+    {
+      type: "search",
+      key: "query",
+      placeholder: "Search by station name, user, or keyword...",
+    },
+    {
+      type: "select",
+      key: "station",
+      label: "All Stations",
+      options: stations.map((s) => ({ value: s.name, label: s.name })),
+    },
+    {
+      type: "select",
+      key: "status",
+      label: "Status",
+      options: [{ value: "needs_review", label: "Needs Review" }],
+    },
+    {
+      type: "select",
+      key: "sort",
+      label: "Sort By",
+      options: [
+        { value: "newest", label: "Newest First" },
+        { value: "oldest", label: "Oldest First" },
+        { value: "station_asc", label: "Station Name (A-Z)" },
+      ],
+    },
+  ];
+
+  const authHeader = {
+    Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+  };
+
+  // Fetch pending and archived feedback on mount
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      try {
+        const [pendingRes, archivedRes, deletedRes] = await Promise.all([
+          fetch(`${API_URI}/api/feedback/admin/pending`, { headers: authHeader }),
+          fetch(`${API_URI}/api/feedback/admin/archived`, { headers: authHeader }),
+          fetch(`${API_URI}/api/feedback/admin/deleted`, { headers: authHeader }),
+        ]);
+
+        if (!pendingRes.ok || !archivedRes.ok || !deletedRes.ok) {
+          throw new Error("Failed to fetch feedback.");
+        }
+
+        const [pendingData, archivedData, deletedData] = await Promise.all([
+          pendingRes.json(),
+          archivedRes.json(),
+          deletedRes.json(),
+        ]);
+        setToReview(pendingData.results.map(mapFeedback));
+        setApproved(archivedData.results.map(mapFeedback));
+        setRejected(deletedData.results.map(mapFeedback));
+      } catch (err) {
+        console.error("FeedbackManagement fetch error:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeedback();
+  }, []);
+
   const filteredToReview = useMemo(() => {
     const q = filters.query.trim().toLowerCase();
-
     let data = [...toReview];
 
-    /**
-     * Filter by search query
-     * Matches station name, user name, or feedback text
-     */
     if (q) {
       data = data.filter((item) => {
         const searchableText =
@@ -100,17 +121,14 @@ export default function FeedbackManagement() {
       });
     }
 
-    // filter by selected station
     if (filters.station !== "all") {
       data = data.filter((item) => item.station === filters.station);
     }
 
-    // sort feedback alphabetically by station name
     if (filters.sort === "station_asc") {
       data.sort((a, b) => a.station.localeCompare(b.station));
     }
-    
-    // reverse order to simulate oldest-first sorting
+
     if (filters.sort === "oldest") {
       data = [...data].reverse();
     }
@@ -118,48 +136,56 @@ export default function FeedbackManagement() {
     return data;
   }, [toReview, filters]);
 
-  // update a specific filter value when changed in the FilterBar component
-  const onChange = (key, value) => 
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+  const onChange = (key, value) =>
+    setFilters((prev) => ({ ...prev, [key]: value }));
 
-  // resets all filters to default values
   const onClear = () =>
-    setFilters({
-      query: "",
-      station: "all",
-      status: "needs_review",
-      sort: "newest",
-     });
+    setFilters({ query: "", station: "all", status: "needs_review", sort: "newest" });
 
   /**
-   * Approves a feedback item by:
-   * - finding it in the review list
-   * - adding it to the approved archive
-   * - removing it from the review list
+   * Approve — calls PATCH /api/feedback/admin/:id/approve
+   * Moves item from toReview to approved locally on success
    */
-  const onApprove = (id) => {
-    const selected = toReview.find((item) => item.id === id);
-    if (!selected) return;
+  const onApprove = async (id) => {
+    try {
+      const res = await fetch(
+        `${API_URI}/api/feedback/admin/${id}/approve`,
+        { method: "PATCH", headers: authHeader }
+      );
 
-    setApproved((prev) => [selected, ...prev]);
-    setToReview((prev) => prev.filter((item) => item.id !== id));
+      if (!res.ok) throw new Error("Failed to approve feedback.");
+
+      const selected = toReview.find((item) => item.id === id);
+      if (!selected) return;
+
+      setApproved((prev) => [selected, ...prev]);
+      setToReview((prev) => prev.filter((item) => item.id !== id));
+    } catch (err) {
+      console.error("onApprove error:", err);
+    }
   };
-  
-  /**
-   * Rejects a feedback item by:
-   * - finding it in the review list
-   * - adding it to the rejected archive
-   * - removing it from the review list
-   */
-  const onReject = (id) => {
-    const selected = toReview.find((item) => item.id === id);
-    if (!selected) return;
 
-    setRejected((prevRejected) => [selected, ...prevRejected]);
-    setToReview((prev) => prev.filter((item) => item.id !== id));
+  /**
+   * Reject — calls DELETE /api/feedback/admin/:id (sets isDeleted: true)
+   * Moves item from toReview to rejected locally on success
+   */
+  const onReject = async (id) => {
+    try {
+      const res = await fetch(
+        `${API_URI}/api/feedback/admin/${id}`,
+        { method: "DELETE", headers: authHeader }
+      );
+
+      if (!res.ok) throw new Error("Failed to reject feedback.");
+
+      const selected = toReview.find((item) => item.id === id);
+      if (!selected) return;
+
+      setRejected((prev) => [selected, ...prev]);
+      setToReview((prev) => prev.filter((item) => item.id !== id));
+    } catch (err) {
+      console.error("onReject error:", err);
+    }
   };
 
   return (
@@ -167,34 +193,39 @@ export default function FeedbackManagement() {
 
       {/* Page Header */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Feedback Management
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900">Feedback Management</h1>
         <p className="text-sm text-gray-600">
           Review, moderate, and archive user-submitted feedback.
         </p>
       </div>
 
-      {/* Filter Controls */}
-      <FilterBar
-        filters={feedbackFilters}
-        values={filters}
-        onChange={onChange}
-        onClear={onClear}
-      />
+      {loading && <p className="text-sm text-gray-400">Loading feedback...</p>}
+      {error && <p className="text-sm text-red-500">{error}</p>}
 
-      {/* Table of feedback items that needs review */}
-      <FeedbackToReviewTable
-        rows={filteredToReview}
-        onApprove={onApprove}
-        onReject={onReject}
-      />
+      {!loading && !error && (
+        <>
+          {/* Filter Controls */}
+          <FilterBar
+            filters={feedbackFilters}
+            values={filters}
+            onChange={onChange}
+            onClear={onClear}
+          />
 
-      {/* Archive section for approved and rejected feedback */}
-      <FeedbackArchive 
-        approved={approved} 
-        rejected={rejected} 
-      />
-  </div>
+          {/* Pending feedback table */}
+          <FeedbackToReviewTable
+            rows={filteredToReview}
+            onApprove={onApprove}
+            onReject={onReject}
+          />
+
+          {/* Archive: approved and rejected */}
+          <FeedbackArchive
+            approved={approved}
+            rejected={rejected}
+          />
+        </>
+      )}
+    </div>
   );
 }
