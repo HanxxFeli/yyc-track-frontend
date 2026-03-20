@@ -10,7 +10,7 @@ import CalgaryMap from "../components/map/CalgaryMap";
 import "leaflet/dist/leaflet.css";
 
 const LandingPage = () => {
-  // Mock news/updates data - colored dots indicate severity/type
+  // Transit updates - normally would fetch from backend API
   const updates = [
     {
       id: 1,
@@ -36,7 +36,7 @@ const LandingPage = () => {
     {
       id: 4,
       title: "CTrain Weekend Maintenance",
-      description: "Lebron is my GOAT.",
+      description: "Expect slower travel on Sunday afternoon.",
       time: "2 days ago",
       dotColor: "bg-orange-400",
     },
@@ -44,42 +44,58 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      
-      {/* HERO SECTION */}
-      <section>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+      {/* Hero Section - main landing area */}
+      <section className="bg-white py-20 sm:py-24 lg:py-32 relative overflow-hidden">
+        {/* Grid pattern only in hero section */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {" "}
+          {/* z-10 to stay above grid pattern */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            
+            {" "}
+            {/* 2 columns on desktop, stacks on mobile */}
+            {/* Left side - text and buttons */}
             <div>
-              <p className="text-xl text-[#BC0B2A] font-semibold mb-4 tracking-wide">
-                For Calgary Commuters
-              </p>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+              {/* Small label at top */}
+              <div className="inline-block mb-4">
+                <span className="text-sm font-semibold text-[#BC0B2A] uppercase tracking-wide">
+                  For Calgary Commuters
+                </span>
+              </div>
+
+              {/* Main heading */}
+              <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-6">
                 Track real-time station experiences.
               </h1>
-              <p className="text-lg mb-8 text-gray-600 leading-relaxed">
+
+              {/* Description */}
+              <p className="text-xl text-gray-600 mb-8">
                 Discover how Calgary commuters rate transit stations for safety,
                 cleanliness, accessibility, and crowding.
               </p>
-              
+
+              {/* CTA buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   to="/map"
-                  className="inline-block px-8 py-3 bg-[#BC0B2A] text-white rounded-md font-bold hover:bg-[#A30A26] transition text-center"
+                  className="px-8 py-4 bg-[#BC0B2A]  text-white rounded-lg font-semibold hover:bg-red-700 transition text-center"
                 >
                   Explore Map
                 </Link>
                 <Link
                   to="/stations"
-                  className="inline-block px-8 py-3 border-2 border-[#BC0B2A] text-[#BC0B2A] rounded-md font-bold hover:bg-gray-50 transition text-center"
+                  className="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:border-gray-400 transition text-center"
                 >
                   Learn More
                 </Link>
               </div>
             </div>
-            
-            <div className="bg-white rounded-xl shadow-2xl overflow-hidden z-20">
-              <div className="h-[300px] sm:h-[400px] lg:h-[450px]">
+            {/* Right side - map preview */}
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div className="h-96">
+                {" "}
+                {/* Fixed height for map */}
                 <CalgaryMap
                   filters={{
                     searchQuery: "",
@@ -88,9 +104,9 @@ const LandingPage = () => {
                   }}
                 />
               </div>
-              <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
+              <div className="px-4 py-3 bg-gray-50 border-t">
                 <p className="text-xs text-gray-600 text-center">
-                  Live data from the Calgary Transit Feedback
+                  Live data from Calgary Transit Feedback
                 </p>
               </div>
             </div>
@@ -98,164 +114,212 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* FEATURES SECTION */}
-      <section className="py-16 sm:py-20 bg-gray-100">
+      {/* Features Section - why use this app */}
+      <section className="py-20 sm:py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <div className="bg-white p-8 rounded-lg shadow-md text-center">
-              <FiBarChart2
-                className="w-14 h-14 text-gray-900 mx-auto mb-4"
-                strokeWidth={1.5}
-              />
+          {/* Section header */}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Why YYC Track?
+            </h2>
+            <p className="text-lg text-gray-600">
+              Real-time insights to make your commute safer and more informed
+            </p>
+          </div>
+
+          {/* Feature cards - 3 columns */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                <FiBarChart2 className="w-6 h-6 text-[#BC0B2A] " />
+              </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Station-Insights
+                Station Insights
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
+              <p className="text-gray-600">
                 Compare safety, cleanliness, and accessibility ratings across
-                all stations.
+                all stations to plan your route.
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-lg shadow-md text-center">
-              <FiUsers
-                className="w-14 h-14 text-gray-900 mx-auto mb-4"
-                strokeWidth={1.5}
-              />
+            {/* Feature 2 */}
+            <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                <FiUsers className="w-6 h-6 text-[#BC0B2A] " />
+              </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Community Feedback
+                Community Powered
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Contribute to a data-driven picture of Calgary's transit
-                experience.
+              <p className="text-gray-600">
+                Join thousands of Calgary commuters sharing real experiences to
+                improve our transit system.
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-lg shadow-md text-center">
-              <FiTrendingUp
-                className="w-14 h-14 text-gray-900 mx-auto mb-4"
-                strokeWidth={1.5}
-              />
+            {/* Feature 3 */}
+            <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                <FiTrendingUp className="w-6 h-6 text-[#BC0B2A] " />
+              </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Real-time Trends
+                Live Updates
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Stay updated as CEI scores change throughout the day.
+              <p className="text-gray-600">
+                Get instant notifications when station conditions change
+                throughout the day.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS SECTION */}
-      <section className="py-16 sm:py-20 bg-gray-100">
+      {/* How it works - 3 step process */}
+      <section className="py-20 sm:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-16">
-            How it works
-          </h2>
+          {/* Section header */}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              How it works
+            </h2>
+            <p className="text-lg text-gray-600">
+              Three simple steps to make your commute better
+            </p>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <div className="bg-white p-8 rounded-lg shadow-md text-center">
-              <FiEdit3
-                className="w-14 h-14 text-gray-900 mx-auto mb-4"
-                strokeWidth={1.5}
-              />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Submit Feedback
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Share your station experience.
-              </p>
+          {/* Steps grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {/* Step 1 */}
+            <div className="text-center">
+              {/* Number badge */}
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-[#BC0B2A] text-white rounded-full font-bold text-lg mb-6">
+                1
+              </div>
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <FiEdit3 className="w-10 h-10 text-[#BC0B2A]  mx-auto mb-4" />
+                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  Submit Feedback
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Rate your experience at any CTrain station in seconds.
+                </p>
+              </div>
             </div>
 
-            <div className="bg-white p-8 rounded-lg shadow-md text-center">
-              <FiTrendingUp
-                className="w-14 h-14 text-gray-900 mx-auto mb-4"
-                strokeWidth={1.5}
-              />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                CEI Updates
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Our system recalculates commuter scores instantly.
-              </p>
+            {/* Step 2 */}
+            <div className="text-center">
+              {/* Number badge */}
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-[#BC0B2A] text-white rounded-full font-bold text-lg mb-6">
+                2
+              </div>
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <FiTrendingUp className="w-10 h-10 text-[#BC0B2A]  mx-auto mb-4" />
+                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  Real-time Analysis
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Our system instantly updates station scores for everyone.
+                </p>
+              </div>
             </div>
 
-            <div className="bg-white p-8 rounded-lg shadow-md text-center">
-              <FiBell
-                className="w-14 h-14 text-gray-900 mx-auto mb-4"
-                strokeWidth={1.5}
-              />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Stay Notified
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Receive alerts when a stations CEI drops.
-              </p>
+            {/* Step 3 */}
+            <div className="text-center">
+              {/* Number badge */}
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-[#BC0B2A] text-white rounded-full font-bold text-lg mb-6">
+                3
+              </div>
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <FiBell className="w-10 h-10 text-[#BC0B2A]  mx-auto mb-4" />
+                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  Stay Informed
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Get alerts when conditions change at your stations.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA SECTION */}
-      {/* <section className="py-16 sm:py-20 bg-red-50">
+      {/* CTA Section - encourage sign up */}
+      <section className="py-20 sm:py-24 bg-[#BC0B2A]  text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          {/* Heading */}
+          <h2 className="text-4xl sm:text-5xl font-bold mb-6">
             Find your station now
           </h2>
-          <p className="text-base text-gray-600 mb-8">
-            Search, filter, and explore real-time ratings.
+
+          {/* Description */}
+          <p className="text-xl mb-10 text-red-100">
+            Search, filter, and explore real-time ratings for every CTrain
+            station in Calgary.
           </p>
 
+          {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/login"
-              className="inline-block px-8 py-3 bg-[#BC0B2A] text-white rounded-md font-bold hover:bg-[#A30A26] transition"
+              className="px-8 py-4 bg-white text-red-600 rounded-lg font-semibold hover:bg-gray-100 transition"
             >
-              Login
+              Get Started
             </Link>
             <Link
               to="/map"
-              className="inline-block px-8 py-3 border-2 border-[#BC0B2A] text-[#BC0B2A] bg-white rounded-md font-bold hover:bg-gray-50 transition"
+              className="px-8 py-4 border-2 border-white text-white rounded-lg font-semibold hover:bg-red-700 transition"
             >
-              Learn More
+              Explore Stations
             </Link>
           </div>
         </div>
-      </section> */}
+      </section>
 
-      {/* TRANSIT UPDATES & NEWS SECTION */}
-      <section className="py-16 sm:py-20 bg-gray-100">
+      {/* Latest Updates - news cards */}
+      <section className="py-20 sm:py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-12">
-            Transit Updates & News
-          </h2>
+          {/* Section header */}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Latest Transit Updates
+            </h2>
+            <p className="text-lg text-gray-600">
+              Stay informed about what's happening across Calgary's CTrain
+              network
+            </p>
+          </div>
 
+          {/* News cards grid - 4 columns on desktop */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {updates.map((update) => (
-              <div
-                key={update.id}
-                className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition"
-              >
-                <div className="flex items-start gap-3 mb-3">
-                  <div
-                    className={`w-3 h-3 rounded-full ${update.dotColor} flex-shrink-0 mt-1`}
-                  ></div>
-                  <h3 className="font-bold text-gray-900 text-sm leading-snug">
-                    {update.title}
-                  </h3>
+            {updates.map(
+              (
+                update, // Loop through each update
+              ) => (
+                <div
+                  key={update.id} // Unique key for each card
+                  className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition cursor-pointer"
+                >
+                  {/* Header with colored dot and title */}
+                  <div className="flex items-start gap-3 mb-4">
+                    <div
+                      className={`w-2 h-2 rounded-full ${update.dotColor} mt-2`}
+                    ></div>{" "}
+                    {/* Status dot */}
+                    <h3 className="font-bold text-gray-900 text-sm">
+                      {update.title}
+                    </h3>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-sm text-gray-600 mb-4">
+                    {update.description}
+                  </p>
+
+                  {/* Timestamp */}
+                  <p className="text-xs text-gray-400">{update.time}</p>
                 </div>
-                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                  {update.description}
-                </p>
-                <p className="text-xs text-gray-400">
-                  {update.time}
-                </p>
-              </div>
-            ))}
+              ),
+            )}
           </div>
         </div>
       </section>
